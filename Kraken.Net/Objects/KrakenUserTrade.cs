@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CryptoExchange.Net.Converters;
 using CryptoExchange.Net.ExchangeInterfaces;
 using Kraken.Net.Converters;
+using Kraken.Net.Enums;
 using Newtonsoft.Json;
 
 namespace Kraken.Net.Objects
@@ -19,10 +20,16 @@ namespace Kraken.Net.Objects
         public string OrderId { get; set; } = string.Empty;
 
         /// <summary>
+        /// Pos id
+        /// </summary>
+        [JsonProperty("postxid")]
+        public string PosId { get; set; } = string.Empty;
+
+        /// <summary>
         /// Trade id
         /// </summary>
         [JsonIgnore]
-        public string TradeId { get; set; } = string.Empty;
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// Symbol
@@ -51,7 +58,8 @@ namespace Kraken.Net.Objects
         /// <summary>
         /// Cost of the trade
         /// </summary>
-        public decimal Cost { get; set; }
+        [JsonProperty("cost")]
+        public decimal QuoteQuantity { get; set; }
         /// <summary>
         /// Fee paid for trade
         /// </summary>
@@ -111,7 +119,7 @@ namespace Kraken.Net.Objects
         /// </summary>
         public IEnumerable<string> Trades { get; set; } = Array.Empty<string>();
 
-        string ICommonTrade.CommonId => TradeId;
+        string ICommonTrade.CommonId => Id;
         decimal ICommonTrade.CommonPrice => Price;
         decimal ICommonTrade.CommonQuantity => Quantity;
         decimal ICommonTrade.CommonFee => Fee;

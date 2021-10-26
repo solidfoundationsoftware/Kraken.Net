@@ -38,9 +38,10 @@ namespace Kraken.Net.Objects
         [JsonProperty("info")]
         public string TransactionInfo { get; set; } = string.Empty;
         /// <summary>
-        /// The amount involved in the deposit
+        /// The quantity involved in the deposit
         /// </summary>
-        public decimal Amount { get; set; }
+        [JsonProperty("amount")]
+        public decimal Quantity { get; set; }
         /// <summary>
         /// The fee paid for the deposit
         /// </summary>

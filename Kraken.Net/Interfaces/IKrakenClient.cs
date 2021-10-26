@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
 using Kraken.Net.Converters;
+using Kraken.Net.Enums;
 using Kraken.Net.Objects;
 using Kraken.Net.Objects.Socket;
 
@@ -59,7 +60,7 @@ namespace Kraken.Net.Interfaces
         /// <param name="symbol">Symbol to get tickers for</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns>Dictionary with ticker info</returns>
-        Task<WebCallResult<Dictionary<string, KrakenRestTick>>> GetTickersAsync(string symbol, CancellationToken ct = default);
+        Task<WebCallResult<Dictionary<string, KrakenRestTick>>> GetTickerAsync(string symbol, CancellationToken ct = default);
 
         /// <summary>
         /// Get tickers for symbols
@@ -115,7 +116,7 @@ namespace Kraken.Net.Interfaces
         Task<WebCallResult<Dictionary<string, decimal>>> GetBalancesAsync(string? twoFactorPassword = null, CancellationToken ct = default);
 
         /// <summary>
-        /// Get balances including amount in holding
+        /// Get balances including quantity in holding
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         /// <param name="twoFactorPassword">Password or authentication app code if enabled</param>
@@ -123,7 +124,7 @@ namespace Kraken.Net.Interfaces
         WebCallResult<Dictionary<string, KrakenBalanceAvailable>> GetAvailableBalances(string? twoFactorPassword = null, CancellationToken ct = default);
 
         /// <summary>
-        /// Get balances including amount in holding
+        /// Get balances including quantity in holding
         /// </summary>
         /// <param name="ct">Cancellation token</param>
         /// <param name="twoFactorPassword">Password or authentication app code if enabled</param>
@@ -340,11 +341,11 @@ namespace Kraken.Net.Interfaces
         /// </summary>
         /// <param name="asset">The asset</param>
         /// <param name="key">The withdrawal key name</param>
-        /// <param name="amount">The amount to withdraw</param>
+        /// <param name="quantity">The quantity to withdraw</param>
         /// <param name="twoFactorPassword">Password or authentication app code if enabled</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        Task<WebCallResult<KrakenWithdrawInfo>> GetWithdrawInfoAsync(string asset, string key, decimal amount,
+        Task<WebCallResult<KrakenWithdrawInfo>> GetWithdrawInfoAsync(string asset, string key, decimal quantity,
             string? twoFactorPassword = null, CancellationToken ct = default);
 
         /// <summary>
@@ -352,11 +353,11 @@ namespace Kraken.Net.Interfaces
         /// </summary>
         /// <param name="asset">The asset being withdrawn</param>
         /// <param name="key">The withdrawal key name, as set up on your account</param>
-        /// <param name="amount">The amount to withdraw, including fees</param>
+        /// <param name="quantity">The quantity to withdraw, including fees</param>
         /// <param name="twoFactorPassword">Password or authentication app code if enabled</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns>Withdraw reference id</returns>
-        Task<WebCallResult<KrakenWithdraw>> WithdrawAsync(string asset, string key, decimal amount, string? twoFactorPassword = null, CancellationToken ct = default);
+        Task<WebCallResult<KrakenWithdraw>> WithdrawAsync(string asset, string key, decimal quantity, string? twoFactorPassword = null, CancellationToken ct = default);
 
         /// <summary>
         /// Get the token to connect to the private websocket streams

@@ -1,4 +1,6 @@
-﻿namespace Kraken.Net.Objects
+﻿using Newtonsoft.Json;
+
+namespace Kraken.Net.Objects
 {
     /// <summary>
     /// Withdraw info
@@ -13,6 +15,11 @@
         /// Limit to what can be withdrawn right now
         /// </summary>
         public decimal Limit { get; set; }
+        /// <summary>
+        /// Quantity that will be send, after fees
+        /// </summary>
+        [JsonProperty("amount")]
+        public decimal Quantity { get; set; }
         /// <summary>
         /// Fee that will be paid
         /// </summary>

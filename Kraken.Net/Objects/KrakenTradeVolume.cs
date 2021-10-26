@@ -10,9 +10,10 @@ namespace Kraken.Net.Objects
     public class KrakenTradeVolume
     {
         /// <summary>
-        /// Currency
+        /// Asset
         /// </summary>
-        public string Currency { get; set; } = string.Empty;
+        [JsonProperty("currency")]
+        public string Asset { get; set; } = string.Empty;
         /// <summary>
         /// Volume
         /// </summary>

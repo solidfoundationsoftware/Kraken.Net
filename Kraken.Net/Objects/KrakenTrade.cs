@@ -2,6 +2,7 @@
 using CryptoExchange.Net.Converters;
 using CryptoExchange.Net.ExchangeInterfaces;
 using Kraken.Net.Converters;
+using Kraken.Net.Enums;
 using Newtonsoft.Json;
 
 namespace Kraken.Net.Objects

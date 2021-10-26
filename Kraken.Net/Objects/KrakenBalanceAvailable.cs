@@ -14,18 +14,19 @@ namespace Kraken.Net.Objects
         /// <summary>
         /// Balance
         /// </summary>
-        public decimal Balance { get; set; }
+        [JsonProperty("balance")]
+        public decimal Total { get; set; }
 
         /// <summary>
-        /// The amount currently locked into a trade
+        /// The quantity currently locked into a trade
         /// </summary>
         [JsonProperty("hold_trade")]
         public decimal Locked { get; set; }
 
         /// <summary>
-        /// The amount available
+        /// The quantity available
         /// </summary>
         [JsonIgnore]
-        public decimal Available => Balance - Locked;
+        public decimal Available => Total - Locked;
     }
 }

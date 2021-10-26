@@ -11,7 +11,7 @@ namespace Kraken.Net.Objects.Socket
     public class KrakenStreamCancelAllResult : KrakenSocketResponseBase
     {
         /// <summary>
-        /// Number of orders cancelled
+        /// Number of orders canceled
         /// </summary>
         public int Count { get; set; }
     }

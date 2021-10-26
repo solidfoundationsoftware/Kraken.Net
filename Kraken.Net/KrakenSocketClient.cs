@@ -9,6 +9,7 @@ using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
 using Kraken.Net.Converters;
+using Kraken.Net.Enums;
 using Kraken.Net.Interfaces;
 using Kraken.Net.Objects;
 using Kraken.Net.Objects.Socket;
@@ -78,23 +79,13 @@ namespace Kraken.Net
             defaultOptions = options;
         }
 
-        /// <summary>
-        /// Subscribe to system status updates. Gets fired when the socket is connected or when the system status changes. Note that if this is not the first subscription
-        /// on the socket connection it does not fire the initial system status event
-        /// </summary>
-        /// <param name="handler">Data handler</param>
-        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToSystemStatusUpdatesAsync(Action<DataEvent<KrakenStreamSystemStatus>> handler)
         {
             return await SubscribeAsync(null, "SystemStatus", false, handler).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Subscribe to ticker updates
-        /// </summary>
-        /// <param name="symbol">Symbol to subscribe to</param>
-        /// <param name="handler">Data handler</param>
-        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(string symbol, Action<DataEvent<KrakenStreamTick>> handler)
         {
             symbol.ValidateKrakenWebsocketSymbol();
@@ -106,12 +97,7 @@ namespace Kraken.Net
             return await SubscribeAsync(new KrakenSubscribeRequest("ticker", NextId(), subSymbol), null, false, internalHandler).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Subscribe to ticker updates
-        /// </summary>
-        /// <param name="symbols">Symbols to subscribe to</param>
-        /// <param name="handler">Data handler</param>
-        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(IEnumerable<string> symbols, Action<DataEvent<KrakenStreamTick>> handler)
         {
             var symbolArray = symbols.ToArray();
@@ -128,13 +114,7 @@ namespace Kraken.Net
             return await SubscribeAsync(new KrakenSubscribeRequest("ticker", NextId(), symbolArray), null, false, internalHandler).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Subscribe to kline updates
-        /// </summary>
-        /// <param name="symbol">Symbol to subscribe to</param>
-        /// <param name="interval">Kline interval</param>
-        /// <param name="handler">Data handler</param>
-        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToKlineUpdatesAsync(string symbol, KlineInterval interval, Action<DataEvent<KrakenStreamKline>> handler)
         {
             symbol.ValidateKrakenWebsocketSymbol();
@@ -149,12 +129,7 @@ namespace Kraken.Net
             return await SubscribeAsync(new KrakenSubscribeRequest("ohlc", NextId(), subSymbol) { Details = new KrakenOHLCSubscriptionDetails(intervalMinutes) }, null, false, internalHandler).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Subscribe to trade updates
-        /// </summary>
-        /// <param name="symbol">Symbol to subscribe to</param>
-        /// <param name="handler">Data handler</param>
-        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string symbol, Action<DataEvent<IEnumerable<KrakenTrade>>> handler)
         {
             symbol.ValidateKrakenWebsocketSymbol();
@@ -167,12 +142,7 @@ namespace Kraken.Net
             return await SubscribeAsync(new KrakenSubscribeRequest("trade", NextId(), subSymbol), null, false, internalHandler).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Subscribe to spread updates
-        /// </summary>
-        /// <param name="symbol">Symbol to subscribe to</param>
-        /// <param name="handler">Data handler</param>
-        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToSpreadUpdatesAsync(string symbol, Action<DataEvent<KrakenStreamSpread>> handler)
         {
             symbol.ValidateKrakenWebsocketSymbol();
@@ -184,13 +154,7 @@ namespace Kraken.Net
             return await SubscribeAsync(new KrakenSubscribeRequest("spread", NextId(), subSymbol), null, false, internalHandler).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Subscribe to depth updates
-        /// </summary>
-        /// <param name="symbol">Symbol to subscribe to</param>
-        /// <param name="depth">Depth of the initial order book snapshot. 10, 25, 100, 500 or 1000</param>
-        /// <param name="handler">Data handler</param>
-        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToOrderBookUpdatesAsync(string symbol, int depth, Action<DataEvent<KrakenStreamOrderBook>> handler)
         {
             symbol.ValidateKrakenWebsocketSymbol();
@@ -218,12 +182,7 @@ namespace Kraken.Net
             return await SubscribeAsync(new KrakenSubscribeRequest("book", NextId(), subSymbol) { Details = new KrakenDepthSubscriptionDetails(depth)}, null, false, innerHandler).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Subscribe to open order updates
-        /// </summary>
-        /// <param name="socketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
-        /// <param name="handler">Data handler</param>
-        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToOrderUpdatesAsync(string socketToken, Action<DataEvent<KrakenStreamOrder>> handler)
         {
             var innerHandler = new Action<DataEvent<string>>(data =>
@@ -246,7 +205,7 @@ namespace Kraken.Net
                             {
                                 foreach(var dEntry in entry)
                                 {
-                                    dEntry.Value.OrderId = dEntry.Key;
+                                    dEntry.Value.Id = dEntry.Key;
                                     dEntry.Value.SequenceNumber = sequence;
                                     handler?.Invoke(data.As(dEntry.Value, dEntry.Value.OrderDetails?.Symbol));
                                 }
@@ -265,22 +224,11 @@ namespace Kraken.Net
             }, null, false, innerHandler).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Subscribe to own trade updates
-        /// </summary>
-        /// <param name="socketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
-        /// <param name="handler">Data handler</param>
-        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        /// <inheritdoc />
         public Task<CallResult<UpdateSubscription>> SubscribeToOwnTradeUpdatesAsync(string socketToken, Action<DataEvent<KrakenStreamUserTrade>> handler)
             => SubscribeToOwnTradeUpdatesAsync(socketToken, true, handler);
 
-        /// <summary>
-        /// Subscribe to own trade updates
-        /// </summary>
-        /// <param name="socketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
-        /// <param name="snapshot">Whether or not to receive a snapshot of the data upon subscribing</param>
-        /// <param name="handler">Data handler</param>
-        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        /// <inheritdoc />
         public async Task<CallResult<UpdateSubscription>> SubscribeToOwnTradeUpdatesAsync(string socketToken, bool snapshot, Action<DataEvent<KrakenStreamUserTrade>> handler)
         {
             var innerHandler = new Action<DataEvent<string>>(data =>
@@ -303,7 +251,7 @@ namespace Kraken.Net
                             {
                                 foreach(var item in entry)
                                 {
-                                    item.Value.TradeId = item.Key;
+                                    item.Value.Id = item.Key;
                                     item.Value.SequenceNumber = sequence;
                                     handler?.Invoke(data.As(item.Value, item.Value.Symbol));
                                 }
@@ -323,40 +271,7 @@ namespace Kraken.Net
             }, null, false, innerHandler).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Place a new order
-        /// </summary>
-        /// <param name="websocketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
-        /// <param name="symbol">The symbol the order is on</param>
-        /// <param name="side">The side of the order</param>
-        /// <param name="type">The type of the order</param>
-        /// <param name="quantity">The quantity of the order</param>
-        /// <param name="clientOrderId">A client id to reference the order by</param>
-        /// <param name="price">Price of the order:
-        /// Limit=limit price,
-        /// StopLoss=stop loss price,
-        /// TakeProfit=take profit price,
-        /// StopLossProfit=stop loss price,
-        /// StopLossProfitLimit=stop loss price,
-        /// StopLossLimit=stop loss trigger price,
-        /// TakeProfitLimit=take profit trigger price,
-        /// TrailingStop=trailing stop offset,
-        /// TrailingStopLimit=trailing stop offset,
-        /// StopLossAndLimit=stop loss price,
-        /// </param>
-        /// <param name="secondaryPrice">Secondary price of an order:
-        /// StopLossProfit/StopLossProfitLimit=take profit price,
-        /// StopLossLimit/TakeProfitLimit=triggered limit price,
-        /// TrailingStopLimit=triggered limit offset,
-        /// StopLossAndLimit=limit price</param>
-        /// <param name="leverage">Desired leverage</param>
-        /// <param name="startTime">Scheduled start time</param>
-        /// <param name="expireTime">Expiration time</param>
-        /// <param name="validateOnly">Only validate inputs, don't actually place the order</param>
-        /// <param name="closeOrderType">Close order type</param>
-        /// <param name="closePrice">Close order price</param>
-        /// <param name="secondaryClosePrice">Close order secondary price</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public async Task<CallResult<KrakenStreamPlacedOrder>> PlaceOrderAsync(
             string websocketToken, 
             string symbol,
@@ -398,21 +313,11 @@ namespace Kraken.Net
             return await QueryAsync<KrakenStreamPlacedOrder>(_authBaseAddress, request, false).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Cancel an order
-        /// </summary>
-        /// <param name="websocketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
-        /// <param name="orderId">Id of the order to cancel</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public Task<CallResult<bool>> CancelOrderAsync(string websocketToken, string orderId)
             => CancelOrdersAsync(websocketToken, new[] { orderId });
 
-        /// <summary>
-        /// Cancel multiple orders
-        /// </summary>
-        /// <param name="websocketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
-        /// <param name="orderIds">Id of the orders to cancel</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public async Task<CallResult<bool>> CancelOrdersAsync(string websocketToken, IEnumerable<string> orderIds)
         {
             var request = new KrakenSocketCancelOrdersRequest
@@ -428,11 +333,7 @@ namespace Kraken.Net
             return new CallResult<bool>(false, result.Error);
         }
 
-        /// <summary>
-        /// Cancel all open orders
-        /// </summary>
-        /// <param name="websocketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public async Task<CallResult<KrakenStreamCancelAllResult>> CancelAllOrdersAsync(string websocketToken)
         {
             var request = new KrakenSocketRequestBase
@@ -444,12 +345,7 @@ namespace Kraken.Net
             return await QueryAsync<KrakenStreamCancelAllResult>(_authBaseAddress, request, false).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Cancel all open orders after the timeout
-        /// </summary>
-        /// <param name="timeout"></param>
-        /// <param name="websocketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public async Task<CallResult<KrakenStreamCancelAfterResult>> CancelAllOrdersAfterAsync(string websocketToken, TimeSpan timeout)
         {
             var request = new KrakenSocketCancelAfterRequest

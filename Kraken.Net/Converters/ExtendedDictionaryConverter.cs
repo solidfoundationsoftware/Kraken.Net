@@ -16,7 +16,7 @@ namespace Kraken.Net.Converters
             writer.WritePropertyName("data");
             writer.WriteRawValue(JsonConvert.SerializeObject(data.Data));
             writer.WritePropertyName("last");
-            writer.WriteValue(JsonConvert.SerializeObject(data.Last, new TimestampSecondsConverter()));
+            writer.WriteValue(JsonConvert.SerializeObject(data.LastUpdateTime, new TimestampSecondsConverter()));
             writer.WriteEndObject();
         }
 
@@ -35,9 +35,9 @@ namespace Kraken.Net.Converters
             {
                 var timestamp = lastValue.Value<long>();
                 if (timestamp > 1000000000000000000)
-                    result.Last = lastValue.ToObject<DateTime>(new JsonSerializer() { Converters = { new TimestampNanoSecondsConverter() } });
+                    result.LastUpdateTime = lastValue.ToObject<DateTime>(new JsonSerializer() { Converters = { new TimestampNanoSecondsConverter() } });
                 else
-                    result.Last = lastValue.ToObject<DateTime>(new JsonSerializer() { Converters = { new TimestampSecondsConverter() } });
+                    result.LastUpdateTime = lastValue.ToObject<DateTime>(new JsonSerializer() { Converters = { new TimestampSecondsConverter() } });
             }
             return Convert.ChangeType(result, objectType);
         }
@@ -62,7 +62,8 @@ namespace Kraken.Net.Converters
         /// The timestamp of the data
         /// </summary>
         [JsonConverter(typeof(TimestampSecondsConverter))]
-        public DateTime Last { get; set; }
+        [JsonProperty("last")]
+        public DateTime LastUpdateTime { get; set; }
     }
 
     /// <summary>

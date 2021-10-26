@@ -4,6 +4,7 @@ using CryptoExchange.Net.Attributes;
 using CryptoExchange.Net.Converters;
 using CryptoExchange.Net.ExchangeInterfaces;
 using Kraken.Net.Converters;
+using Kraken.Net.Enums;
 using Newtonsoft.Json;
 
 namespace Kraken.Net.Objects
@@ -17,7 +18,7 @@ namespace Kraken.Net.Objects
         /// The id of the order
         /// </summary>
         [JsonIgnore]
-        public string OrderId { get; set; } = string.Empty;
+        public string Id { get; set; } = string.Empty;
         /// <summary>
         /// Reference id
         /// </summary>
@@ -37,7 +38,7 @@ namespace Kraken.Net.Objects
         /// Open timestamp
         /// </summary>
         [JsonProperty("opentm"), JsonConverter(typeof(TimestampSecondsConverter))]
-        public DateTime OpenTime { get; set; }
+        public DateTime CreateTime { get; set; }
         /// <summary>
         /// Start timestamp
         /// </summary>
@@ -52,7 +53,7 @@ namespace Kraken.Net.Objects
         /// Close timestamp
         /// </summary>
         [JsonProperty("closetm"), JsonConverter(typeof(TimestampSecondsConverter))]
-        public DateTime? ClosedTime { get; set; }
+        public DateTime? CloseTime { get; set; }
 
         /// <summary>
         /// Order details
@@ -68,11 +69,12 @@ namespace Kraken.Net.Objects
         /// Filled quantity
         /// </summary>
         [JsonProperty("vol_exec")]
-        public decimal ExecutedQuantity { get; set; }
+        public decimal QuantityFilled { get; set; }
         /// <summary>
         /// Cost of the order
         /// </summary>
-        public decimal Cost { get; set; }
+        [JsonProperty("cost")]
+        public decimal QuoteQuantityFilled { get; set; }
         /// <summary>
         /// Fee
         /// </summary>
@@ -89,7 +91,8 @@ namespace Kraken.Net.Objects
         /// <summary>
         /// Limit price
         /// </summary>
-        public decimal LimitPrice { get; set; }
+        [JsonProperty("limitprice")]
+        public decimal Price { get; set; }
         /// <summary>
         /// Miscellaneous info
         /// </summary>

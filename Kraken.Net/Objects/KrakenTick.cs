@@ -64,11 +64,11 @@ namespace Kraken.Net.Objects
         /// Open price
         /// </summary>
         [JsonProperty("o")]
-        public decimal Open { get; set; }
+        public decimal OpenPrice { get; set; }
 
         string ICommonTicker.CommonSymbol => Symbol;
-        decimal ICommonTicker.CommonHigh => High.Value24H;
-        decimal ICommonTicker.CommonLow => Low.Value24H;
+        decimal ICommonTicker.CommonHighPrice => High.Value24H;
+        decimal ICommonTicker.CommonLowPrice => Low.Value24H;
         decimal ICommonTicker.CommonVolume => Volume.Value24H;
     }
 

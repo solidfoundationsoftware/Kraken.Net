@@ -19,12 +19,12 @@ namespace Kraken.Net.Objects
         /// Best bid price
         /// </summary>
         [ArrayProperty(1)]
-        public decimal Bid { get; set; }
+        public decimal BestBidPrice { get; set; }
         /// <summary>
         /// Best ask price
         /// </summary>
         [ArrayProperty(2)]
-        public decimal Ask { get; set; }
+        public decimal BestAskPrice { get; set; }
     }
 
     /// <summary>
@@ -37,27 +37,27 @@ namespace Kraken.Net.Objects
         /// Best bid price
         /// </summary>
         [ArrayProperty(0)]
-        public decimal Bid { get; set; }
+        public decimal BestBidPrice { get; set; }
         /// <summary>
         /// Best ask price
         /// </summary>
         [ArrayProperty(1)]
-        public decimal Ask { get; set; }
+        public decimal BestAskPrice { get; set; }
         /// <summary>
         /// Timestamp of the data
         /// </summary>
         [ArrayProperty(2), JsonConverter(typeof(TimestampSecondsConverter))]
         public DateTime Timestamp { get; set; }
         /// <summary>
-        /// Best bid volume
+        /// Best bid quantity
         /// </summary>
         [ArrayProperty(3)]
-        public decimal BidVolume { get; set; }
+        public decimal BestBidQuantity { get; set; }
         /// <summary>
-        /// Best ask volume
+        /// Best ask quantity
         /// </summary>
         [ArrayProperty(4)]
-        public decimal AskVolume { get; set; }
+        public decimal BestAskQuantity { get; set; }
 
     }
 }

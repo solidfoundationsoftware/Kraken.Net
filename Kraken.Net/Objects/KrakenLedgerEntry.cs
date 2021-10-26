@@ -1,6 +1,7 @@
 ﻿using System;
 using CryptoExchange.Net.Converters;
 using Kraken.Net.Converters;
+using Kraken.Net.Enums;
 using Newtonsoft.Json;
 
 namespace Kraken.Net.Objects
@@ -25,7 +26,10 @@ namespace Kraken.Net.Objects
         /// </summary>
         [JsonConverter(typeof(LedgerEntryTypeConverter))]
         public LedgerEntryType Type { get; set; }
-
+        /// <summary>
+        /// Sub type
+        /// </summary>
+        public string? SubType { get; set; }
         /// <summary>
         /// Class of the asset
         /// </summary>

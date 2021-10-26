@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
+using Kraken.Net.Enums;
 using Kraken.Net.Objects;
 using Kraken.Net.Objects.Socket;
 

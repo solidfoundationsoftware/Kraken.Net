@@ -1,5 +1,6 @@
 ﻿using CryptoExchange.Net.Converters;
 using Kraken.Net.Converters;
+using Kraken.Net.Enums;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

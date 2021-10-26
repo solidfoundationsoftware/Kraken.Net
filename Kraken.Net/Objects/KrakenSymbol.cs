@@ -81,10 +81,10 @@ namespace Kraken.Net.Objects
         public IEnumerable<KrakenFeeEntry> FeesMaker { get; set; } = Array.Empty<KrakenFeeEntry>();
 
         /// <summary>
-        /// The currency the fee is deducted from
+        /// The asset the fee is deducted from
         /// </summary>
         [JsonProperty("fee_volume_currency")]
-        public string FeeCurrency { get; set; } = string.Empty;
+        public string FeeAsset { get; set; } = string.Empty;
         /// <summary>
         /// Margin call level
         /// </summary>
@@ -103,6 +103,6 @@ namespace Kraken.Net.Objects
         public decimal OrderMin { get; set; }
 
         string ICommonSymbol.CommonName => BaseAsset + QuoteAsset;
-        decimal ICommonSymbol.CommonMinimumTradeSize => OrderMin;
+        decimal ICommonSymbol.CommonMinimumTradeQuantity => OrderMin;
     }
 }

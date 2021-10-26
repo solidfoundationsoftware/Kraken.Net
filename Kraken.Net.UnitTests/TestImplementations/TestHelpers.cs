@@ -174,107 +174,54 @@ namespace Kraken.Net.UnitTests.TestImplementations
                 .Returns(request.Object);
         }
         
-        public static T CreateObjectWithTestParameters<T>() where T: class
-        {
-            var type = typeof(T);
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-            {
-                var elementType = type.GenericTypeArguments[0];
-                Type listType = typeof(List<>).MakeGenericType(new[] { elementType });
-                IList list = (IList)Activator.CreateInstance(listType)!;
-                list.Add(GetTestValue(elementType, 0));
-                list.Add(GetTestValue(elementType, 1));
-                return (T)list;
-            }
-            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
-            {
-                var result = (IDictionary)Activator.CreateInstance(type)!;
-                result.Add(GetTestValue(type.GetGenericArguments()[0], 0)!, GetTestValue(type.GetGenericArguments()[1], 0));
-                result.Add(GetTestValue(type.GetGenericArguments()[0], 1)!, GetTestValue(type.GetGenericArguments()[1], 1));
-                return (T)Convert.ChangeType(result, type);
-            }
-            else
-            {
-                var obj = Activator.CreateInstance<T>();
-                return FillWithTestParameters(obj);
-            }
-        }
-
-        public static T FillWithTestParameters<T>(T obj) where T : class
-        {
-
-            var properties = obj.GetType().GetProperties();
-            int i = 1;
-            foreach (var property in properties)
-            {
-                var value = GetTestValue(property.PropertyType, i);
-                Type t = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                object? safeValue = (value == null) ? null : Convert.ChangeType(value, t);
-                property.SetValue(obj, safeValue, null);
-                i++;
-            }
-
-            return obj;
-        }
-
-        public static object[] CreateParametersForMethod(MethodInfo method, Dictionary<string, object> defaultValues)
-        {
-            var param = method.GetParameters();
-            var result = new object[param.Length];
-            for(int i = 0; i < param.Length; i++)
-            {
-                if (defaultValues.ContainsKey(param[i].Name!))
-                    result[i] = defaultValues[param[i].Name!];
-                else
-                    result[i] = GetTestValue(param[i].ParameterType, i)!;
-            }
-
-            return result;
-        }
-
         public static object? GetTestValue(Type type, int i)
         {
             if (type == typeof(bool))
                 return true;
 
             if (type == typeof(bool?))
-                return (bool?) true;
+                return (bool?)true;
 
             if (type == typeof(decimal))
-                return i / 10m;
+                return i / 100m;
 
             if (type == typeof(decimal?))
-                return (decimal?) (i / 10m);
+                return (decimal?)(i / 100m);
 
-            if (type == typeof(int) || type == typeof(long))
-                return i;
+            if (type == typeof(int))
+                return i + 1;
 
             if (type == typeof(int?))
-                return (int?) i;
+                return (int?)i;
+
+            if (type == typeof(long))
+                return (long)i;
 
             if (type == typeof(long?))
-                return (long?) i;
+                return (long?)i;
 
             if (type == typeof(DateTime))
                 return new DateTime(2019, 1, Math.Max(i, 1));
 
-            if(type == typeof(DateTime?))
-                return (DateTime?) new DateTime(2019, 1, Math.Max(i, 1));
+            if (type == typeof(DateTime?))
+                return (DateTime?)new DateTime(2019, 1, Math.Max(i, 1));
 
             if (type == typeof(string))
-                return "string" + i;
+                return "STRING" + i;
 
+            if (type == typeof(IEnumerable<string>))
+                return new[] { "string" + i };
             if (type.IsEnum)
             {
-                return Activator.CreateInstance(type)!;
+                return Activator.CreateInstance(type);
             }
 
             if (type.IsArray)
             {
-                var elementType = type.GetElementType();
-                var result = Array.CreateInstance(elementType!, 2);
-                result.SetValue(GetTestValue(elementType!, 0), 0);
-                result.SetValue(GetTestValue(elementType!, 1), 1);
+                var elementType = type.GetElementType()!;
+                var result = Array.CreateInstance(elementType, 2);
+                result.SetValue(GetTestValue(elementType, 0), 0);
+                result.SetValue(GetTestValue(elementType, 1), 1);
                 return result;
             }
 
@@ -294,12 +241,15 @@ namespace Kraken.Net.UnitTests.TestImplementations
                 return Convert.ChangeType(result, type);
             }
 
-            if (type.IsClass)
-#pragma warning disable CS8634 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'class' constraint.
-                return FillWithTestParameters(Activator.CreateInstance(type));
-#pragma warning restore CS8634 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'class' constraint.
-
             return null;
+        }
+
+        public static async Task<object> InvokeAsync(MethodInfo @this, object obj, params object[] parameters)
+        {
+            var task = (Task)@this.Invoke(obj, parameters);
+            await task.ConfigureAwait(false);
+            var resultProperty = task.GetType().GetProperty("Result");
+            return resultProperty.GetValue(task);
         }
     }
 }

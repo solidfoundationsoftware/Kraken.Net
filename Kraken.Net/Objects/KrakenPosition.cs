@@ -1,6 +1,7 @@
 ﻿using System;
 using CryptoExchange.Net.Converters;
 using Kraken.Net.Converters;
+using Kraken.Net.Enums;
 using Newtonsoft.Json;
 
 namespace Kraken.Net.Objects
@@ -16,6 +17,11 @@ namespace Kraken.Net.Objects
         [JsonProperty("ordertxid")]
         public string OrderId { get; set; } = string.Empty;
         /// <summary>
+        /// Status
+        /// </summary>
+        [JsonProperty("posstatus")]
+        public string Status { get; set; } = string.Empty;
+        /// <summary>
         /// Symbol
         /// </summary>
         [JsonProperty("pair")]
@@ -25,6 +31,11 @@ namespace Kraken.Net.Objects
         /// </summary>
         [JsonProperty("time"), JsonConverter(typeof(TimestampSecondsConverter))]
         public DateTime Timestamp { get; set; }
+        /// <summary>
+        /// Rollover time
+        /// </summary>
+        [JsonProperty("rollovertm"), JsonConverter(typeof(TimestampSecondsConverter))]
+        public DateTime? RollOverTime { get; set; }
         /// <summary>
         /// Side
         /// </summary>
@@ -74,5 +85,9 @@ namespace Kraken.Net.Objects
         /// Flags
         /// </summary>
         public string OFlags { get; set; } = string.Empty;
+        /// <summary>
+        /// Terms
+        /// </summary>
+        public string Terms { get; set; } = string.Empty;
     }
 }
