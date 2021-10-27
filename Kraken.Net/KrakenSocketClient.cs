@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
@@ -80,13 +81,13 @@ namespace Kraken.Net
         }
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToSystemStatusUpdatesAsync(Action<DataEvent<KrakenStreamSystemStatus>> handler)
+        public async Task<CallResult<UpdateSubscription>> SubscribeToSystemStatusUpdatesAsync(Action<DataEvent<KrakenStreamSystemStatus>> handler, CancellationToken ct = default)
         {
-            return await SubscribeAsync(null, "SystemStatus", false, handler).ConfigureAwait(false);
+            return await SubscribeAsync(null, "SystemStatus", false, handler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(string symbol, Action<DataEvent<KrakenStreamTick>> handler)
+        public async Task<CallResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(string symbol, Action<DataEvent<KrakenStreamTick>> handler, CancellationToken ct = default)
         {
             symbol.ValidateKrakenWebsocketSymbol();
             var subSymbol = SymbolToServer(symbol);
@@ -94,11 +95,11 @@ namespace Kraken.Net
             {
                 handler(data.As(data.Data.Data, symbol));
             });
-            return await SubscribeAsync(new KrakenSubscribeRequest("ticker", NextId(), subSymbol), null, false, internalHandler).ConfigureAwait(false);
+            return await SubscribeAsync(new KrakenSubscribeRequest("ticker", NextId(), subSymbol), null, false, internalHandler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(IEnumerable<string> symbols, Action<DataEvent<KrakenStreamTick>> handler)
+        public async Task<CallResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(IEnumerable<string> symbols, Action<DataEvent<KrakenStreamTick>> handler, CancellationToken ct = default)
         {
             var symbolArray = symbols.ToArray();
             for (var i = 0; i< symbolArray.Length; i++)
@@ -111,11 +112,11 @@ namespace Kraken.Net
                 handler(data.As(data.Data.Data, data.Data.Symbol));
             });
 
-            return await SubscribeAsync(new KrakenSubscribeRequest("ticker", NextId(), symbolArray), null, false, internalHandler).ConfigureAwait(false);
+            return await SubscribeAsync(new KrakenSubscribeRequest("ticker", NextId(), symbolArray), null, false, internalHandler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToKlineUpdatesAsync(string symbol, KlineInterval interval, Action<DataEvent<KrakenStreamKline>> handler)
+        public async Task<CallResult<UpdateSubscription>> SubscribeToKlineUpdatesAsync(string symbol, KlineInterval interval, Action<DataEvent<KrakenStreamKline>> handler, CancellationToken ct = default)
         {
             symbol.ValidateKrakenWebsocketSymbol();
             var subSymbol = SymbolToServer(symbol);
@@ -126,11 +127,11 @@ namespace Kraken.Net
                 handler(data.As(data.Data.Data, symbol));
             });
 
-            return await SubscribeAsync(new KrakenSubscribeRequest("ohlc", NextId(), subSymbol) { Details = new KrakenOHLCSubscriptionDetails(intervalMinutes) }, null, false, internalHandler).ConfigureAwait(false);
+            return await SubscribeAsync(new KrakenSubscribeRequest("ohlc", NextId(), subSymbol) { Details = new KrakenOHLCSubscriptionDetails(intervalMinutes) }, null, false, internalHandler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string symbol, Action<DataEvent<IEnumerable<KrakenTrade>>> handler)
+        public async Task<CallResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string symbol, Action<DataEvent<IEnumerable<KrakenTrade>>> handler, CancellationToken ct = default)
         {
             symbol.ValidateKrakenWebsocketSymbol();
             var subSymbol = SymbolToServer(symbol);
@@ -139,11 +140,11 @@ namespace Kraken.Net
             {
                 handler(data.As(data.Data.Data, symbol));
             });
-            return await SubscribeAsync(new KrakenSubscribeRequest("trade", NextId(), subSymbol), null, false, internalHandler).ConfigureAwait(false);
+            return await SubscribeAsync(new KrakenSubscribeRequest("trade", NextId(), subSymbol), null, false, internalHandler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToSpreadUpdatesAsync(string symbol, Action<DataEvent<KrakenStreamSpread>> handler)
+        public async Task<CallResult<UpdateSubscription>> SubscribeToSpreadUpdatesAsync(string symbol, Action<DataEvent<KrakenStreamSpread>> handler, CancellationToken ct = default)
         {
             symbol.ValidateKrakenWebsocketSymbol();
             var subSymbol = SymbolToServer(symbol);
@@ -151,11 +152,11 @@ namespace Kraken.Net
             {
                 handler(data.As(data.Data.Data, symbol));
             });
-            return await SubscribeAsync(new KrakenSubscribeRequest("spread", NextId(), subSymbol), null, false, internalHandler).ConfigureAwait(false);
+            return await SubscribeAsync(new KrakenSubscribeRequest("spread", NextId(), subSymbol), null, false, internalHandler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToOrderBookUpdatesAsync(string symbol, int depth, Action<DataEvent<KrakenStreamOrderBook>> handler)
+        public async Task<CallResult<UpdateSubscription>> SubscribeToOrderBookUpdatesAsync(string symbol, int depth, Action<DataEvent<KrakenStreamOrderBook>> handler, CancellationToken ct = default)
         {
             symbol.ValidateKrakenWebsocketSymbol();
             depth.ValidateIntValues(nameof(depth), 10, 25, 100, 500, 1000);
@@ -179,11 +180,11 @@ namespace Kraken.Net
                 handler(data.As(evnt.Data, symbol));
             });
 
-            return await SubscribeAsync(new KrakenSubscribeRequest("book", NextId(), subSymbol) { Details = new KrakenDepthSubscriptionDetails(depth)}, null, false, innerHandler).ConfigureAwait(false);
+            return await SubscribeAsync(new KrakenSubscribeRequest("book", NextId(), subSymbol) { Details = new KrakenDepthSubscriptionDetails(depth)}, null, false, innerHandler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToOrderUpdatesAsync(string socketToken, Action<DataEvent<KrakenStreamOrder>> handler)
+        public async Task<CallResult<UpdateSubscription>> SubscribeToOrderUpdatesAsync(string socketToken, Action<DataEvent<KrakenStreamOrder>> handler, CancellationToken ct = default)
         {
             var innerHandler = new Action<DataEvent<string>>(data =>
             {
@@ -221,15 +222,15 @@ namespace Kraken.Net
             return await SubscribeAsync(_authBaseAddress, new KrakenSubscribeRequest("openOrders", NextId())
             {
                 Details = new KrakenOpenOrdersSubscriptionDetails(socketToken)
-            }, null, false, innerHandler).ConfigureAwait(false);
+            }, null, false, innerHandler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public Task<CallResult<UpdateSubscription>> SubscribeToOwnTradeUpdatesAsync(string socketToken, Action<DataEvent<KrakenStreamUserTrade>> handler)
-            => SubscribeToOwnTradeUpdatesAsync(socketToken, true, handler);
+        public Task<CallResult<UpdateSubscription>> SubscribeToUserTradeUpdatesAsync(string socketToken, Action<DataEvent<KrakenStreamUserTrade>> handler, CancellationToken ct = default)
+            => SubscribeToUserTradeUpdatesAsync(socketToken, true, handler, ct);
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToOwnTradeUpdatesAsync(string socketToken, bool snapshot, Action<DataEvent<KrakenStreamUserTrade>> handler)
+        public async Task<CallResult<UpdateSubscription>> SubscribeToUserTradeUpdatesAsync(string socketToken, bool snapshot, Action<DataEvent<KrakenStreamUserTrade>> handler, CancellationToken ct = default)
         {
             var innerHandler = new Action<DataEvent<string>>(data =>
             {
@@ -268,7 +269,7 @@ namespace Kraken.Net
             return await SubscribeAsync(_authBaseAddress, new KrakenSubscribeRequest("ownTrades", NextId())
             {
                 Details = new KrakenOwnTradesSubscriptionDetails(socketToken, snapshot)
-            }, null, false, innerHandler).ConfigureAwait(false);
+            }, null, false, innerHandler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
