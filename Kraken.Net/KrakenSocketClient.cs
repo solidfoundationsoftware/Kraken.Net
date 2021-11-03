@@ -508,7 +508,7 @@ namespace Kraken.Net
             else
                 unsubRequest = new KrakenUnsubscribeRequest(NextId(), kRequest.ChannelId.Value);
             var result = false;
-            await connection.SendAndWaitAsync(unsubRequest, ResponseTimeout, data =>
+            await connection.SendAndWaitAsync(unsubRequest, ClientOptions.SocketResponseTimeout, data =>
             {
                 if (data.Type != JTokenType.Object)
                     return false;
