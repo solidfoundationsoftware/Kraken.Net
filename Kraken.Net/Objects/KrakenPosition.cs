@@ -12,6 +12,10 @@ namespace Kraken.Net.Objects
     public class KrakenPosition
     {
         /// <summary>
+        /// The position id
+        /// </summary>
+        public string Id { get; set; } = string.Empty;
+        /// <summary>
         /// Order id
         /// </summary>
         [JsonProperty("ordertxid")]

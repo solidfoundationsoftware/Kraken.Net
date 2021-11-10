@@ -35,7 +35,13 @@ namespace Kraken.Net.Clients.Rest.Spot
             parameters.AddOptionalParameter("trades", true);
             parameters.AddOptionalParameter("userref", clientOrderId);
             parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
-            return await _baseClient.Execute<OpenOrdersPage>(_baseClient.GetUri("0/private/OpenOrders"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            var result = await _baseClient.Execute<OpenOrdersPage>(_baseClient.GetUri("0/private/OpenOrders"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            if (result)
+            {
+                foreach (var item in result.Data.Open)
+                    item.Value.Id = item.Key;
+            }
+            return result;
         }
 
         /// <inheritdoc />
@@ -48,7 +54,13 @@ namespace Kraken.Net.Clients.Rest.Spot
             parameters.AddOptionalParameter("end", endTime.HasValue ? JsonConvert.SerializeObject(endTime.Value, new TimestampSecondsConverter()) : null);
             parameters.AddOptionalParameter("ofs", resultOffset);
             parameters.AddOptionalParameter("otp", twoFactorPassword);
-            return await _baseClient.Execute<KrakenClosedOrdersPage>(_baseClient.GetUri("0/private/ClosedOrders"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            var result = await _baseClient.Execute<KrakenClosedOrdersPage>(_baseClient.GetUri("0/private/ClosedOrders"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            if (result)
+            {
+                foreach (var item in result.Data.Closed)
+                    item.Value.Id = item.Key;
+            }
+            return result;
         }
 
         /// <inheritdoc />
@@ -63,7 +75,13 @@ namespace Kraken.Net.Clients.Rest.Spot
             parameters.AddOptionalParameter("userref", clientOrderId);
             parameters.AddOptionalParameter("txid", orderIds?.Any() == true ? string.Join(",", orderIds) : null);
             parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
-            return await _baseClient.Execute<Dictionary<string, KrakenOrder>>(_baseClient.GetUri("0/private/QueryOrders"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            var result = await _baseClient.Execute<Dictionary<string, KrakenOrder>>(_baseClient.GetUri("0/private/QueryOrders"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            if (result)
+            {
+                foreach (var item in result.Data)
+                    item.Value.Id = item.Key;
+            }
+            return result;
         }
 
         /// <inheritdoc />
@@ -97,7 +115,13 @@ namespace Kraken.Net.Clients.Rest.Spot
             parameters.AddOptionalParameter("trades", true);
             parameters.AddOptionalParameter("txid", tradeIds?.Any() == true ? string.Join(",", tradeIds) : null);
             parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
-            return await _baseClient.Execute<Dictionary<string, KrakenUserTrade>>(_baseClient.GetUri("0/private/QueryTrades"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            var result = await _baseClient.Execute<Dictionary<string, KrakenUserTrade>>(_baseClient.GetUri("0/private/QueryTrades"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            if (result)
+            {
+                foreach (var item in result.Data)
+                    item.Value.Id = item.Key;
+            }
+            return result;
         }
 
 

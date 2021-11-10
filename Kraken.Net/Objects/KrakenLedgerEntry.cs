@@ -12,6 +12,10 @@ namespace Kraken.Net.Objects
     public class KrakenLedgerEntry
     {
         /// <summary>
+        /// The id
+        /// </summary>
+        public string Id { get; set; } = string.Empty;
+        /// <summary>
         /// Reference id
         /// </summary>
         [JsonProperty("refid")]

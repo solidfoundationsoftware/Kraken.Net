@@ -62,7 +62,13 @@ namespace Kraken.Net.Clients.Rest.Spot
             parameters.AddOptionalParameter("docalcs", true);
             parameters.AddOptionalParameter("txid", transactionIds?.Any() == true ? string.Join(",", transactionIds) : null);
             parameters.AddOptionalParameter("otp", twoFactorPassword ??  _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
-            return await _baseClient.Execute<Dictionary<string, KrakenPosition>>(_baseClient.GetUri("0/private/OpenPositions"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            var result = await _baseClient.Execute<Dictionary<string, KrakenPosition>>(_baseClient.GetUri("0/private/OpenPositions"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            if (result)
+            {
+                foreach (var item in result.Data)
+                    item.Value.Id = item.Key;
+            }
+            return result;
         }
 
         /// <inheritdoc />
@@ -75,7 +81,13 @@ namespace Kraken.Net.Clients.Rest.Spot
             parameters.AddOptionalParameter("end", endTime.HasValue ? JsonConvert.SerializeObject(endTime.Value, new TimestampSecondsConverter()) : null);
             parameters.AddOptionalParameter("ofs", resultOffset);
             parameters.AddOptionalParameter("otp", twoFactorPassword ??  _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
-            return await _baseClient.Execute<KrakenLedgerPage>(_baseClient.GetUri("0/private/Ledgers"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            var result = await _baseClient.Execute<KrakenLedgerPage>(_baseClient.GetUri("0/private/Ledgers"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            if (result)
+            {
+                foreach (var item in result.Data.Ledger)
+                    item.Value.Id = item.Key;
+            }
+            return result;
         }
 
         /// <inheritdoc />
@@ -84,7 +96,13 @@ namespace Kraken.Net.Clients.Rest.Spot
             var parameters = new Dictionary<string, object>();
             parameters.AddOptionalParameter("id", ledgerIds?.Any() == true ? string.Join(",", ledgerIds) : null);
             parameters.AddOptionalParameter("otp", twoFactorPassword ??  _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
-            return await _baseClient.Execute<Dictionary<string, KrakenLedgerEntry>>(_baseClient.GetUri("0/private/QueryLedgers"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            var result = await _baseClient.Execute<Dictionary<string, KrakenLedgerEntry>>(_baseClient.GetUri("0/private/QueryLedgers"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            if (result)
+            {
+                foreach (var item in result.Data)
+                    item.Value.Id = item.Key;
+            }
+            return result;
         }
 
         /// <inheritdoc />
