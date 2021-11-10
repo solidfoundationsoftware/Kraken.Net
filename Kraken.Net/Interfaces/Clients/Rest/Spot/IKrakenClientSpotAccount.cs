@@ -27,14 +27,6 @@ namespace Kraken.Net.Interfaces.Clients.Rest.Spot
         /// <param name="ct">Cancellation token</param>
         /// <param name="twoFactorPassword">Password or authentication app code if enabled</param>
         /// <returns>Dictionary with balances for assets</returns>
-        WebCallResult<Dictionary<string, KrakenBalanceAvailable>> GetAvailableBalances(string? twoFactorPassword = null, CancellationToken ct = default);
-
-        /// <summary>
-        /// Get balances including quantity in holding
-        /// </summary>
-        /// <param name="ct">Cancellation token</param>
-        /// <param name="twoFactorPassword">Password or authentication app code if enabled</param>
-        /// <returns>Dictionary with balances for assets</returns>
         Task<WebCallResult<Dictionary<string, KrakenBalanceAvailable>>> GetAvailableBalancesAsync(string? twoFactorPassword = null, CancellationToken ct = default);
 
         /// <summary>

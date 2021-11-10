@@ -37,9 +37,6 @@ namespace Kraken.Net.Clients.Rest.Spot
         }
 
         /// <inheritdoc />
-        public WebCallResult<Dictionary<string, KrakenBalanceAvailable>> GetAvailableBalances(string? twoFactorPassword = null, CancellationToken ct = default) => GetAvailableBalancesAsync(twoFactorPassword, ct).Result;
-
-        /// <inheritdoc />
         public async Task<WebCallResult<Dictionary<string, KrakenBalanceAvailable>>> GetAvailableBalancesAsync(string? twoFactorPassword = null, CancellationToken ct = default)
         {
             var parameters = new Dictionary<string, object>();
