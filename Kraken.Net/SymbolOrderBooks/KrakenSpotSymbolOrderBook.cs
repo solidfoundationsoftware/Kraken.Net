@@ -13,12 +13,12 @@ using Kraken.Net.Interfaces.Clients.Socket;
 using Kraken.Net.Objects;
 using Microsoft.Extensions.Logging;
 
-namespace Kraken.Net
+namespace Kraken.Net.SymbolOrderBooks
 {
     /// <summary>
     /// Live order book implementation
     /// </summary>
-    public class KrakenSymbolOrderBook : SymbolOrderBook
+    public class KrakenSpotSymbolOrderBook : SymbolOrderBook
     {
         private readonly IKrakenSocketClientSpot socketClient;
         private readonly bool _socketOwner;
@@ -30,7 +30,7 @@ namespace Kraken.Net
         /// <param name="symbol">The symbol the order book is for</param>
         /// <param name="limit">The initial limit of entries in the order book</param>
         /// <param name="options">Options for the order book</param>
-        public KrakenSymbolOrderBook(string symbol, int limit, KrakenOrderBookOptions? options = null) : base("Kraken[Spot]", symbol, options ?? new KrakenOrderBookOptions())
+        public KrakenSpotSymbolOrderBook(string symbol, int limit, KrakenOrderBookOptions? options = null) : base("Kraken[Spot]", symbol, options ?? new KrakenOrderBookOptions())
         {
             sequencesAreConsecutive = false;
             strictLevels = true;
