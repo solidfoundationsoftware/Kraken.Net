@@ -60,7 +60,7 @@ namespace Kraken.Net.UnitTests
             var client = TestHelpers.CreateAuthResponseClient($"{{\"error\": [\"first error\", \"another error\"], \"result\": null}}");
 
             // act
-            var result = await client.GetSymbolsAsync();
+            var result = await client.ExchangeData.GetSymbolsAsync();
 
             // assert
             Assert.IsFalse(result.Success);
@@ -75,7 +75,7 @@ namespace Kraken.Net.UnitTests
             var client = TestHelpers.CreateAuthResponseClient($"Error request", System.Net.HttpStatusCode.BadRequest);
 
             // act
-            var result = await client.GetSymbolsAsync();
+            var result = await client.ExchangeData.GetSymbolsAsync();
 
             // assert
             Assert.IsFalse(result.Success);

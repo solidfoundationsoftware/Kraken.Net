@@ -9,12 +9,12 @@ using Kraken.Net.Enums;
 using Kraken.Net.Objects;
 using Kraken.Net.Objects.Socket;
 
-namespace Kraken.Net.Interfaces
+namespace Kraken.Net.Interfaces.Clients.Socket
 {
     /// <summary>
     /// Interface for the Kraken socket client
     /// </summary>
-    public interface IKrakenSocketClient: ISocketClient
+    public interface IKrakenSocketClientSpot: ISocketClient
     {
         /// <summary>
         /// Set the API key and secret

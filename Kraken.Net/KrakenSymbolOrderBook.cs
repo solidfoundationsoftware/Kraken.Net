@@ -7,7 +7,9 @@ using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.OrderBook;
 using CryptoExchange.Net.Sockets;
 using Force.Crc32;
+using Kraken.Net.Clients.Socket;
 using Kraken.Net.Interfaces;
+using Kraken.Net.Interfaces.Clients.Socket;
 using Kraken.Net.Objects;
 using Microsoft.Extensions.Logging;
 
@@ -18,7 +20,7 @@ namespace Kraken.Net
     /// </summary>
     public class KrakenSymbolOrderBook : SymbolOrderBook
     {
-        private readonly IKrakenSocketClient socketClient;
+        private readonly IKrakenSocketClientSpot socketClient;
         private readonly bool _socketOwner;
         private bool initialSnapshotDone;
 
@@ -28,9 +30,12 @@ namespace Kraken.Net
         /// <param name="symbol">The symbol the order book is for</param>
         /// <param name="limit">The initial limit of entries in the order book</param>
         /// <param name="options">Options for the order book</param>
-        public KrakenSymbolOrderBook(string symbol, int limit, KrakenOrderBookOptions? options = null) : base(symbol, options ?? new KrakenOrderBookOptions())
+        public KrakenSymbolOrderBook(string symbol, int limit, KrakenOrderBookOptions? options = null) : base("Kraken[Spot]", symbol, options ?? new KrakenOrderBookOptions())
         {
-            socketClient = options?.SocketClient ?? new KrakenSocketClient(new KrakenSocketClientOptions
+            sequencesAreConsecutive = false;
+            strictLevels = true;
+
+            socketClient = options?.SocketClient ?? new KrakenSocketClientSpot(new KrakenSocketClientSpotOptions
             {
                 LogLevel = options?.LogLevel ?? LogLevel.Information
             });

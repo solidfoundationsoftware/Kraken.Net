@@ -163,7 +163,7 @@ namespace Kraken.Net.Objects
         /// </summary>
         public decimal Price { get; set; }
         /// <summary>
-        /// Secondary price of the order (<see cref="KrakenClient.PlaceOrderAsync"/> for details)
+        /// Secondary price of the order (<see cref="KrakenClientSpot.PlaceOrderAsync"/> for details)
         /// </summary>
         [JsonProperty("price2")]
         public decimal SecondaryPrice { get; set; }

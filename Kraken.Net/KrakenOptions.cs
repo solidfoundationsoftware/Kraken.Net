@@ -2,14 +2,23 @@
 using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
 using Kraken.Net.Interfaces;
+using Kraken.Net.Interfaces.Clients.Socket;
 
 namespace Kraken.Net
 {
     /// <summary>
     /// Options for the Kraken client
     /// </summary>
-    public class KrakenClientOptions : RestClientOptions
+    public class KrakenClientSpotOptions : RestClientOptions
     {
+        /// <summary>
+        /// Default options for the spot client
+        /// </summary>
+        public static KrakenClientSpotOptions Default { get; set; } = new KrakenClientSpotOptions()
+        {
+            BaseAddress = "https://api.kraken.com"
+        };
+
         /// <summary>
         /// The static password configured as two-factor authentication for the API key. Will be send as otp parameter on private requests.
         /// </summary>
@@ -21,48 +30,45 @@ namespace Kraken.Net
         public INonceProvider? NonceProvider { get; set; }
 
         /// <summary>
-        /// Create new client options
+        /// Ctor
         /// </summary>
-        public KrakenClientOptions() : this(null, "https://api.kraken.com")
+        public KrakenClientSpotOptions()
         {
+            if (Default == null)
+                return;
+
+            Copy(this, Default);
         }
 
         /// <summary>
-        /// Create new client options
+        /// Copy the values of the def to the input
         /// </summary>
-        /// <param name="client">HttpClient to use for requests from this client</param>
-        public KrakenClientOptions(HttpClient client) : this(client, "https://api.kraken.com")
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input"></param>
+        /// <param name="def"></param>
+        public new void Copy<T>(T input, T def) where T : KrakenClientSpotOptions
         {
-        }
+            base.Copy(input, def);
 
-        /// <summary>
-        /// Create new client options
-        /// </summary>
-        /// <param name="apiAddress">Custom API address to use</param>
-        /// <param name="client">HttpClient to use for requests from this client</param>
-        public KrakenClientOptions(HttpClient? client, string apiAddress) : base(apiAddress)
-        {
-            HttpClient = client;
-        }
-
-        /// <summary>
-        /// Copy this instance
-        /// </summary>
-        /// <returns></returns>
-        public KrakenClientOptions Copy()
-        {
-            var copy = Copy<KrakenClientOptions>();
-            copy.StaticTwoFactorAuthenticationPassword = StaticTwoFactorAuthenticationPassword;
-            copy.NonceProvider = NonceProvider;
-            return copy;
+            input.NonceProvider = def.NonceProvider;
+            input.StaticTwoFactorAuthenticationPassword = def.StaticTwoFactorAuthenticationPassword;
         }
     }
 
     /// <summary>
     /// Options for the Kraken socket client
     /// </summary>
-    public class KrakenSocketClientOptions : SocketClientOptions
+    public class KrakenSocketClientSpotOptions : SocketClientOptions
     {
+        /// <summary>
+        /// Default options for the spot client
+        /// </summary>
+        public static KrakenSocketClientSpotOptions Default { get; set; } = new KrakenSocketClientSpotOptions()
+        {
+            BaseAddress = "wss://ws.kraken.com",
+            SocketSubscriptionsCombineTarget = 10
+        };
+
         private string _authBaseAddress = "wss://ws-auth.kraken.com/";
         /// <summary>
         /// The base address for authenticated subscriptions
@@ -80,22 +86,27 @@ namespace Kraken.Net
         }
 
         /// <summary>
-        /// ctor
+        /// Ctor
         /// </summary>
-        public KrakenSocketClientOptions(): base("wss://ws.kraken.com")
+        public KrakenSocketClientSpotOptions()
         {
-            SocketSubscriptionsCombineTarget = 10;
+            if (Default == null)
+                return;
+
+            Copy(this, Default);
         }
 
         /// <summary>
-        /// Copy this instance
+        /// Copy the values of the def to the input
         /// </summary>
-        /// <returns></returns>
-        public KrakenSocketClientOptions Copy()
+        /// <typeparam name="T"></typeparam>
+        /// <param name="input"></param>
+        /// <param name="def"></param>
+        public new void Copy<T>(T input, T def) where T : KrakenSocketClientSpotOptions
         {
-            var copy = Copy<KrakenSocketClientOptions>();
-            copy.AuthBaseAddress = AuthBaseAddress;
-            return copy;
+            base.Copy(input, def);
+
+            input.AuthBaseAddress = def.AuthBaseAddress;
         }
     }
 
@@ -107,12 +118,12 @@ namespace Kraken.Net
         /// <summary>
         /// The client to use for the socket connection. When using the same client for multiple order books the connection can be shared.
         /// </summary>
-        public IKrakenSocketClient? SocketClient { get; }
+        public IKrakenSocketClientSpot? SocketClient { get; }
 
         /// <summary>
         /// </summary>
         /// <param name="client">The client to use for the socket connection. When using the same client for multiple order books the connection can be shared.</param>
-        public KrakenOrderBookOptions(IKrakenSocketClient? client = null) : base("Kraken", false, true)
+        public KrakenOrderBookOptions(IKrakenSocketClientSpot? client = null)
         {
             SocketClient = client;
         }

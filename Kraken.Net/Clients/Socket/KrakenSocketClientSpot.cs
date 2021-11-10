@@ -12,23 +12,21 @@ using CryptoExchange.Net.Sockets;
 using Kraken.Net.Converters;
 using Kraken.Net.Enums;
 using Kraken.Net.Interfaces;
+using Kraken.Net.Interfaces.Clients.Socket;
 using Kraken.Net.Objects;
 using Kraken.Net.Objects.Socket;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Kraken.Net
+namespace Kraken.Net.Clients.Socket
 {
     /// <summary>
     /// Client for the Kraken websocket API
     /// </summary>
-    public class KrakenSocketClient: SocketClient, IKrakenSocketClient
+    public class KrakenSocketClientSpot: SocketClient, IKrakenSocketClientSpot
     {
-        #region fields
-        private static KrakenSocketClientOptions defaultOptions = new KrakenSocketClientOptions();
-        private static KrakenSocketClientOptions DefaultOptions => defaultOptions.Copy();
-                
+        #region fields                
         private readonly string _authBaseAddress;
         private readonly Dictionary<string, string> _symbolSynonyms;
         #endregion
@@ -37,7 +35,7 @@ namespace Kraken.Net
         /// <summary>
         /// Create a new instance of KrakenSocketClient using the default options
         /// </summary>
-        public KrakenSocketClient() : this(DefaultOptions)
+        public KrakenSocketClientSpot() : this(KrakenSocketClientSpotOptions.Default)
         {
         }
 
@@ -45,7 +43,7 @@ namespace Kraken.Net
         /// Create a new instance of KrakenSocketClient using provided options
         /// </summary>
         /// <param name="options">The options to use for this client</param>
-        public KrakenSocketClient(KrakenSocketClientOptions options) : base("Kraken", options, options.ApiCredentials == null ? null : new KrakenAuthenticationProvider(options.ApiCredentials, null))
+        public KrakenSocketClientSpot(KrakenSocketClientSpotOptions options) : base("Kraken", options, options.ApiCredentials == null ? null : new KrakenAuthenticationProvider(options.ApiCredentials, null))
         {
             AddGenericHandler("HeartBeat", (messageEvent) => { });
             AddGenericHandler("SystemStatus", (messageEvent) => { });
@@ -75,9 +73,9 @@ namespace Kraken.Net
         /// Set the default options to be used when creating new socket clients
         /// </summary>
         /// <param name="options">The options to use for new clients</param>
-        public static void SetDefaultOptions(KrakenSocketClientOptions options)
+        public static void SetDefaultOptions(KrakenSocketClientSpotOptions options)
         {
-            defaultOptions = options;
+            KrakenSocketClientSpotOptions.Default = options;
         }
 
         /// <inheritdoc />

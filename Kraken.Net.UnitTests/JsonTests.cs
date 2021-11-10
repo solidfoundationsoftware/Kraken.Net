@@ -1,4 +1,5 @@
 ﻿using Kraken.Net.Interfaces;
+using Kraken.Net.Interfaces.Clients.Rest.Spot;
 using Kraken.Net.UnitTests.TestImplementations;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -9,13 +10,35 @@ namespace Kraken.Net.UnitTests
     [TestFixture]
     public class JsonTests
     {
-        private JsonToObjectComparer<IKrakenClient> _comparer = new JsonToObjectComparer<IKrakenClient>((json) => TestHelpers.CreateResponseClient(json, new KrakenClientOptions()
+        private JsonToObjectComparer<IKrakenClientSpot> _comparer = new JsonToObjectComparer<IKrakenClientSpot>((json) => TestHelpers.CreateResponseClient(json, new KrakenClientSpotOptions()
         { ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("1234", "1234"), OutputOriginalData = true }));
         
         [Test]
-        public async Task ValidateCalls()
+        public async Task ValidateSpotAccountCalls()
         {   
-            await _comparer.ProcessSubject(c => c,
+            await _comparer.ProcessSubject("Account", c => c.Account,
+                useNestedJsonPropertyForAllCompare: new List<string> { "result" },
+                useNestedJsonPropertyForCompare: new Dictionary<string, string> {
+                    { "GetOrderBookAsync", "XXBTZUSD" } ,
+                }
+                );
+        }
+
+        [Test]
+        public async Task ValidateSpotExchangeDataCalls()
+        {
+            await _comparer.ProcessSubject("ExchangeData", c => c.ExchangeData,
+                useNestedJsonPropertyForAllCompare: new List<string> { "result" },
+                useNestedJsonPropertyForCompare: new Dictionary<string, string> {
+                    { "GetOrderBookAsync", "XXBTZUSD" } ,
+                }
+                );
+        }
+
+        [Test]
+        public async Task ValidateSpotTradingCalls()
+        {
+            await _comparer.ProcessSubject("Trading", c => c.Trading,
                 useNestedJsonPropertyForAllCompare: new List<string> { "result" },
                 useNestedJsonPropertyForCompare: new Dictionary<string, string> {
                     { "GetOrderBookAsync", "XXBTZUSD" } ,
