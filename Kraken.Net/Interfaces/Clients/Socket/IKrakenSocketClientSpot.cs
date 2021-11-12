@@ -25,6 +25,14 @@ namespace Kraken.Net.Interfaces.Clients.Socket
         void SetApiCredentials(string apiKey, string apiSecret, INonceProvider? nonceProvider = null);
 
         /// <summary>
+        /// Subscribe to system status updates
+        /// </summary>
+        /// <param name="handler">Data handler</param>
+        /// <param name="ct">Cancellation token for closing this subscription</param>
+        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        Task<CallResult<UpdateSubscription>> SubscribeToSystemStatusUpdatesAsync(Action<DataEvent<KrakenStreamSystemStatus>> handler, CancellationToken ct = default);
+
+        /// <summary>
         /// Subscribe to ticker updates
         /// </summary>
         /// <param name="symbol">Symbol to subscribe to</param>
@@ -32,6 +40,15 @@ namespace Kraken.Net.Interfaces.Clients.Socket
         /// <param name="ct">Cancellation token for closing this subscription</param>
         /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
         Task<CallResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(string symbol, Action<DataEvent<KrakenStreamTick>> handler, CancellationToken ct = default);
+
+        /// <summary>
+        /// Subscribe to ticker updates
+        /// </summary>
+        /// <param name="symbols">Symbols to subscribe to</param>
+        /// <param name="handler">Data handler</param>
+        /// <param name="ct">Cancellation token for closing this subscription</param>
+        /// <returns>A stream subscription. This stream subscription can be used to be notified when the socket is disconnected/reconnected</returns>
+        Task<CallResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(IEnumerable<string> symbols, Action<DataEvent<KrakenStreamTick>> handler, CancellationToken ct = default);
 
         /// <summary>
         /// Subscribe to kline updates
