@@ -11,7 +11,6 @@ namespace Kraken.Net.Objects
         /// <summary>
         /// Total number of records
         /// </summary>
-        [JsonOptionalProperty]
         public int Count { get; set; }
     }
 

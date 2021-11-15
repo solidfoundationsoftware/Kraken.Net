@@ -93,7 +93,7 @@ namespace Kraken.Net.Clients.Rest.Spot
             parameters.AddOptionalParameter("end", endTime.HasValue ? JsonConvert.SerializeObject(endTime.Value, new TimestampSecondsConverter()) : null);
             parameters.AddOptionalParameter("ofs", resultOffset);
             parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
-            var result = await _baseClient.Execute<KrakenUserTradesPage>(_baseClient.GetUri("0/private/TradesHistory"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            var result = await _baseClient.Execute<KrakenUserTradesPage>(_baseClient.GetUri("0/private/TradesHistory"), HttpMethod.Post, ct, parameters, true, weight: 2).ConfigureAwait(false);
             if (result)
             {
                 foreach (var item in result.Data.Trades)

@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
 using Kraken.Net.Interfaces;
@@ -16,7 +18,14 @@ namespace Kraken.Net
         /// </summary>
         public static KrakenClientSpotOptions Default { get; set; } = new KrakenClientSpotOptions()
         {
-            BaseAddress = "https://api.kraken.com"
+            BaseAddress = "https://api.kraken.com",
+            RateLimiters = new List<IRateLimiter>
+            {
+                 new RateLimiter()
+                    .AddApiKeyLimit(15, TimeSpan.FromSeconds(45), false, false)
+                    .AddEndpointLimit(new string[] { "/private/AddOrder", "/private/CancelOrder", "/private/CancelAll", "/private/CancelAllOrdersAfter" }, 60, TimeSpan.FromSeconds(60), null, true),
+
+            }
         };
 
         /// <summary>

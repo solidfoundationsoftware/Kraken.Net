@@ -16,7 +16,6 @@ namespace Kraken.Net.Objects
         /// <summary>
         /// Pending cancelation orders
         /// </summary>
-        [JsonOptionalProperty]
         public IEnumerable<long> Pending { get; set; } = Array.Empty<long>();
     }
 }

@@ -40,7 +40,6 @@ namespace Kraken.Net.Objects
         /// Close order description
         /// </summary>
         [JsonProperty("close")]
-        [JsonOptionalProperty]
         public string CloseOrderDescription { get; set; } = string.Empty;
     }
 }

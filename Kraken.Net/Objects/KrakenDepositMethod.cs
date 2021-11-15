@@ -23,7 +23,7 @@ namespace Kraken.Net.Objects
         /// <summary>
         /// The fee for setting up an address
         /// </summary>
-        [JsonProperty("address-setup-fee"), JsonOptionalProperty]
+        [JsonProperty("address-setup-fee")]
         public decimal? AddressSetupFee { get; set; }
         /// <summary>
         /// Generate address

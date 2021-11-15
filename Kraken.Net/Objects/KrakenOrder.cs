@@ -104,13 +104,11 @@ namespace Kraken.Net.Objects
         /// <summary>
         /// Reason of failure
         /// </summary>
-        [JsonOptionalProperty]
         public string Reason { get; set; } = string.Empty;
         /// <summary>
         /// Trade ids
         /// </summary>
         [JsonProperty("trades")]
-        [JsonOptionalProperty]
         public IEnumerable<string> TradeIds { get; set; } = Array.Empty<string>();
 
         string ICommonOrderId.CommonId => ReferenceId;
