@@ -8,7 +8,7 @@ namespace Kraken.Net.Objects.Socket
     /// <summary>
     /// Socket request base
     /// </summary>
-    public class KrakenSocketRequestBase
+    internal class KrakenSocketRequestBase
     {
         /// <summary>
         /// Request id

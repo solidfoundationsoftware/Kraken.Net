@@ -9,7 +9,7 @@ namespace Kraken.Net.Objects.Socket
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [JsonConverter(typeof(ArrayConverter))]
-    public class KrakenSocketEvent<T>
+    internal class KrakenSocketEvent<T>
     {
         /// <summary>
         /// Id of the channel
