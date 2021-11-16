@@ -4,6 +4,13 @@ using System;
 using Kraken.Net.Objects;
 using Kraken.Net.UnitTests.TestImplementations;
 using System.Threading.Tasks;
+using Kraken.Net.Clients.Rest.Spot;
+using System.Reflection;
+using System.Linq;
+using System.Diagnostics;
+using Kraken.Net.Clients.Socket;
+using CryptoExchange.Net.Sockets;
+using CryptoExchange.Net.Objects;
 
 namespace Kraken.Net.UnitTests
 {
@@ -128,6 +135,47 @@ namespace Kraken.Net.UnitTests
                 Assert.DoesNotThrow(() => symbol.ValidateKrakenWebsocketSymbol());
             else
                 Assert.Throws(typeof(ArgumentException), () => symbol.ValidateKrakenWebsocketSymbol());
+        }
+
+        [Test]
+        public void CheckRestInterfaces()
+        {
+            var assembly = Assembly.GetAssembly(typeof(KrakenClientSpot));
+            var ignore = new string[] { "IKrakenClientSpot" };
+            var clientInterfaces = assembly.GetTypes().Where(t => t.Name.StartsWith("IKrakenClientSpot") && !ignore.Contains(t.Name));
+
+            foreach (var clientInterface in clientInterfaces)
+            {
+                var implementation = assembly.GetTypes().Single(t => t.IsAssignableTo(clientInterface) && t != clientInterface);
+                int methods = 0;
+                foreach (var method in implementation.GetMethods().Where(m => m.ReturnType.IsAssignableTo(typeof(Task))))
+                {
+                    var interfaceMethod = clientInterface.GetMethod(method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray());
+                    Assert.NotNull(interfaceMethod);
+                    methods++;
+                }
+                Debug.WriteLine($"{clientInterface.Name} {methods} methods validated");
+            }
+        }
+
+        [Test]
+        public void CheckSocketInterfaces()
+        {
+            var assembly = Assembly.GetAssembly(typeof(KrakenSocketClientSpot));
+            var clientInterfaces = assembly.GetTypes().Where(t => t.Name.StartsWith("IKrakenSocketClientSpot"));
+
+            foreach (var clientInterface in clientInterfaces)
+            {
+                var implementation = assembly.GetTypes().Single(t => t.IsAssignableTo(clientInterface) && t != clientInterface);
+                int methods = 0;
+                foreach (var method in implementation.GetMethods().Where(m => m.ReturnType.IsAssignableTo(typeof(Task<CallResult<UpdateSubscription>>))))
+                {
+                    var interfaceMethod = clientInterface.GetMethod(method.Name, method.GetParameters().Select(p => p.ParameterType).ToArray());
+                    Assert.NotNull(interfaceMethod);
+                    methods++;
+                }
+                Debug.WriteLine($"{clientInterface.Name} {methods} methods validated");
+            }
         }
     }
 }
