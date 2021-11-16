@@ -11,6 +11,7 @@ using System.Diagnostics;
 using Kraken.Net.Clients.Socket;
 using CryptoExchange.Net.Sockets;
 using CryptoExchange.Net.Objects;
+using Kraken.Net.Objects.Internal;
 
 namespace Kraken.Net.UnitTests
 {

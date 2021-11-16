@@ -1,12 +1,10 @@
-﻿using CryptoExchange.Net.Converters;
+﻿using System;
+using CryptoExchange.Net.Converters;
 using Kraken.Net.Converters;
 using Kraken.Net.Enums;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Kraken.Net.Objects.Socket
+namespace Kraken.Net.Objects.Internal
 {
     /// <summary>
     /// Place order request

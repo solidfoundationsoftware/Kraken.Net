@@ -16,7 +16,8 @@ using Kraken.Net.Enums;
 using Kraken.Net.Interfaces;
 using Kraken.Net.Interfaces.Clients.Rest.Spot;
 using Kraken.Net.Objects;
-using Kraken.Net.Objects.Socket;
+using Kraken.Net.Objects.Internal;
+using Kraken.Net.Objects.Models;
 using Newtonsoft.Json;
 
 namespace Kraken.Net.Clients.Rest.Spot

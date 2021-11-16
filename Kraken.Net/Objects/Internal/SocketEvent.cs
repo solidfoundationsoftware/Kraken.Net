@@ -2,7 +2,7 @@
 using CryptoExchange.Net.Converters;
 using Newtonsoft.Json;
 
-namespace Kraken.Net.Objects.Socket
+namespace Kraken.Net.Objects.Internal
 {
     /// <summary>
     /// Event received from the socket

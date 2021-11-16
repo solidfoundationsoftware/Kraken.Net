@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
-using Kraken.Net.Interfaces;
 using Kraken.Net.Interfaces.Clients.Socket;
 
-namespace Kraken.Net
+namespace Kraken.Net.Objects
 {
     /// <summary>
     /// Options for the Kraken client

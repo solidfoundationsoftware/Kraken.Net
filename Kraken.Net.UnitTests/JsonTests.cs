@@ -4,6 +4,8 @@ using Kraken.Net.UnitTests.TestImplementations;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CryptoExchange.Net.Interfaces;
+using Kraken.Net.Objects;
 
 namespace Kraken.Net.UnitTests
 {
@@ -11,7 +13,7 @@ namespace Kraken.Net.UnitTests
     public class JsonTests
     {
         private JsonToObjectComparer<IKrakenClientSpot> _comparer = new JsonToObjectComparer<IKrakenClientSpot>((json) => TestHelpers.CreateResponseClient(json, new KrakenClientSpotOptions()
-        { ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("1234", "1234"), OutputOriginalData = true }));
+        { ApiCredentials = new CryptoExchange.Net.Authentication.ApiCredentials("1234", "1234"), OutputOriginalData = true, RateLimiters = new List<IRateLimiter>() }));
         
         [Test]
         public async Task ValidateSpotAccountCalls()

@@ -3,7 +3,7 @@ using CryptoExchange.Net.Converters;
 using CryptoExchange.Net.ExchangeInterfaces;
 using Newtonsoft.Json;
 
-namespace Kraken.Net.Objects
+namespace Kraken.Net.Objects.Models
 {
     /// <summary>
     /// Kline data

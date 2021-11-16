@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Kraken.Net.Objects.Socket
+﻿namespace Kraken.Net.Objects.Models.Socket
 {
     /// <summary>
     /// Response info

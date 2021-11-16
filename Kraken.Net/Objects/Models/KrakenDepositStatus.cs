@@ -2,7 +2,7 @@
 using CryptoExchange.Net.Converters;
 using Newtonsoft.Json;
 
-namespace Kraken.Net.Objects
+namespace Kraken.Net.Objects.Models
 {
     /// <summary>
     /// Deposit status info

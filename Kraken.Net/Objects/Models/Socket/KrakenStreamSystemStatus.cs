@@ -1,11 +1,8 @@
 ﻿using Kraken.Net.Converters;
 using Kraken.Net.Enums;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Kraken.Net.Objects.Socket
+namespace Kraken.Net.Objects.Models.Socket
 {
     /// <summary>
     /// System status

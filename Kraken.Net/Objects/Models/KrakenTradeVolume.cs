@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Kraken.Net.Objects
+namespace Kraken.Net.Objects.Models
 {
     /// <summary>
     /// Trade volume info

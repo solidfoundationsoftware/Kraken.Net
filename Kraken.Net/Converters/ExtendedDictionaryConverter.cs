@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CryptoExchange.Net.Converters;
 using Kraken.Net.Objects;
+using Kraken.Net.Objects.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

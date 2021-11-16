@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Kraken.Net.Objects
+namespace Kraken.Net.Objects.Models
 {
     /// <summary>
     /// Trade balance info

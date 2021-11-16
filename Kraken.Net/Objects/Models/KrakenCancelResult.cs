@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using CryptoExchange.Net.Attributes;
 
-namespace Kraken.Net.Objects
+namespace Kraken.Net.Objects.Models
 {
     /// <summary>
     /// Result of a cancel request

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Newtonsoft.Json;
 
-namespace Kraken.Net.Objects.Socket
+namespace Kraken.Net.Objects.Internal
 {
     internal class KrakenSubscribeRequest
     {

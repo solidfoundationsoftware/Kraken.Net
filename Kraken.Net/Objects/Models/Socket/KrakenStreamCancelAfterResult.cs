@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
-namespace Kraken.Net.Objects.Socket
+namespace Kraken.Net.Objects.Models.Socket
 {
     /// <summary>
     /// Cancel after result

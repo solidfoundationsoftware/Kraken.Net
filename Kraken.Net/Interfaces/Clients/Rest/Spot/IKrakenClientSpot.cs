@@ -7,7 +7,6 @@ using CryptoExchange.Net.Objects;
 using Kraken.Net.Converters;
 using Kraken.Net.Enums;
 using Kraken.Net.Objects;
-using Kraken.Net.Objects.Socket;
 
 namespace Kraken.Net.Interfaces.Clients.Rest.Spot
 {

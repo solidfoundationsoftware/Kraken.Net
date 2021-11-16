@@ -1,12 +1,13 @@
 ﻿using CryptoExchange.Net.Objects;
 using Kraken.Net.Enums;
 using Kraken.Net.Objects;
-using Kraken.Net.Objects.Socket;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Kraken.Net.Objects.Models;
+using Kraken.Net.Objects.Models.Socket;
 
 namespace Kraken.Net.Interfaces.Clients.Rest.Spot
 {

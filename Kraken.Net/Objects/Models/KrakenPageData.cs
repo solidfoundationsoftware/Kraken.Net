@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using CryptoExchange.Net.Attributes;
 
-namespace Kraken.Net.Objects
+namespace Kraken.Net.Objects.Models
 {
     /// <summary>
     /// Base page data

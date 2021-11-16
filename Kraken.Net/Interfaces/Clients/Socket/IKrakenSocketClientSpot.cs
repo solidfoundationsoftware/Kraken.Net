@@ -7,7 +7,8 @@ using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
 using Kraken.Net.Enums;
 using Kraken.Net.Objects;
-using Kraken.Net.Objects.Socket;
+using Kraken.Net.Objects.Models;
+using Kraken.Net.Objects.Models.Socket;
 
 namespace Kraken.Net.Interfaces.Clients.Socket
 {

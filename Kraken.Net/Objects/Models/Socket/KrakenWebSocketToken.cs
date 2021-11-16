@@ -1,4 +1,4 @@
-﻿namespace Kraken.Net.Objects.Socket
+﻿namespace Kraken.Net.Objects.Models.Socket
 {
     /// <summary>
     /// Socket token

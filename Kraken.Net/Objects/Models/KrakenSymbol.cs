@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using CryptoExchange.Net.ExchangeInterfaces;
 using Newtonsoft.Json;
 
-namespace Kraken.Net.Objects
+namespace Kraken.Net.Objects.Models
 {
     /// <summary>
     /// Symbol info

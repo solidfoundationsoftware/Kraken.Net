@@ -1,11 +1,6 @@
-﻿using CryptoExchange.Net.Converters;
-using Kraken.Net.Converters;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
 
-namespace Kraken.Net.Objects.Socket
+namespace Kraken.Net.Objects.Internal
 {
     /// <summary>
     /// Place order request

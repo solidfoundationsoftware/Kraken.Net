@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Kraken.Net.Objects
+namespace Kraken.Net.Objects.Internal
 {
     internal class KrakenResult<T>
     {

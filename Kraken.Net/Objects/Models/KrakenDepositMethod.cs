@@ -1,7 +1,6 @@
-﻿using CryptoExchange.Net.Attributes;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace Kraken.Net.Objects
+namespace Kraken.Net.Objects.Models
 {
     /// <summary>
     /// Info about a deposit method

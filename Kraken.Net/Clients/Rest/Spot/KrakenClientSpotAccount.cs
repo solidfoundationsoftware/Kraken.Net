@@ -5,7 +5,6 @@ using Kraken.Net.Converters;
 using Kraken.Net.Enums;
 using Kraken.Net.Interfaces.Clients.Rest.Spot;
 using Kraken.Net.Objects;
-using Kraken.Net.Objects.Socket;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Kraken.Net.Objects.Models;
+using Kraken.Net.Objects.Models.Socket;
 
 namespace Kraken.Net.Clients.Rest.Spot
 {

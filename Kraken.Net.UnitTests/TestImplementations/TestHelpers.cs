@@ -17,6 +17,7 @@ using Kraken.Net.Clients.Rest.Spot;
 using Kraken.Net.Clients.Socket;
 using Kraken.Net.Interfaces;
 using Kraken.Net.Interfaces.Clients.Rest.Spot;
+using Kraken.Net.Objects;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;

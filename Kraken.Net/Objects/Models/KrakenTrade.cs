@@ -5,7 +5,7 @@ using Kraken.Net.Converters;
 using Kraken.Net.Enums;
 using Newtonsoft.Json;
 
-namespace Kraken.Net.Objects
+namespace Kraken.Net.Objects.Models
 {
     /// <summary>
     /// Trade info
