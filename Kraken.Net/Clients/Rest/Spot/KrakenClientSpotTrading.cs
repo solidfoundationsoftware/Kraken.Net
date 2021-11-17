@@ -4,14 +4,12 @@ using CryptoExchange.Net.Objects;
 using Kraken.Net.Converters;
 using Kraken.Net.Enums;
 using Kraken.Net.Interfaces.Clients.Rest.Spot;
-using Kraken.Net.Objects;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Kraken.Net.Objects.Models;
@@ -20,7 +18,7 @@ namespace Kraken.Net.Clients.Rest.Spot
 {
     public class KrakenClientSpotTrading: IKrakenClientSpotTrading
     {
-        private KrakenClientSpot _baseClient;
+        private readonly KrakenClientSpot _baseClient;
 
         internal KrakenClientSpotTrading(KrakenClientSpot baseClient)
         {
@@ -105,7 +103,7 @@ namespace Kraken.Net.Clients.Rest.Spot
 
         /// <inheritdoc />
         public Task<WebCallResult<Dictionary<string, KrakenUserTrade>>> GetUserTradeDetailsAsync(string tradeId, string? twoFactorPassword = null, CancellationToken ct = default)
-            => GetUserTradeDetailsAsync(new string[] { tradeId }, twoFactorPassword, ct);
+            => GetUserTradeDetailsAsync(new [] { tradeId }, twoFactorPassword, ct);
 
 
         /// <inheritdoc />

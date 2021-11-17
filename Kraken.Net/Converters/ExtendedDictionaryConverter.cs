@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CryptoExchange.Net.Converters;
-using Kraken.Net.Objects;
 using Kraken.Net.Objects.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -25,7 +24,7 @@ namespace Kraken.Net.Converters
         {
             var obj = JObject.Load(reader);
             var inner = obj.First;
-            if (inner == default || inner.First == default)
+            if (inner?.First == null)
                 return null;
 
             var data = inner.First.ToObject<T>();

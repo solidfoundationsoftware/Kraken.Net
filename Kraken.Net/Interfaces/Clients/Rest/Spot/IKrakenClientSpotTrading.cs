@@ -1,9 +1,7 @@
 ﻿using CryptoExchange.Net.Objects;
 using Kraken.Net.Enums;
-using Kraken.Net.Objects;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Kraken.Net.Objects.Models;
@@ -12,7 +10,6 @@ namespace Kraken.Net.Interfaces.Clients.Rest.Spot
 {
     public interface IKrakenClientSpotTrading
     {
-
         /// <summary>
         /// Get a list of open orders
         /// </summary>

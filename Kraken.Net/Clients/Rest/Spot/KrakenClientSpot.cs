@@ -1,24 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
-using CryptoExchange.Net.Converters;
 using CryptoExchange.Net.ExchangeInterfaces;
 using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
-using Kraken.Net.Converters;
 using Kraken.Net.Enums;
-using Kraken.Net.Interfaces;
 using Kraken.Net.Interfaces.Clients.Rest.Spot;
 using Kraken.Net.Objects;
 using Kraken.Net.Objects.Internal;
 using Kraken.Net.Objects.Models;
-using Newtonsoft.Json;
 
 namespace Kraken.Net.Clients.Rest.Spot
 {
@@ -103,7 +98,7 @@ namespace Kraken.Net.Clients.Rest.Spot
 
         async Task<WebCallResult<ICommonTicker>> IExchangeClient.GetTickerAsync(string symbol)
         {
-            var ticker = await ExchangeData.GetTickerAsync(symbol, default).ConfigureAwait(false);
+            var ticker = await ExchangeData.GetTickerAsync(symbol).ConfigureAwait(false);
             return ticker.As<ICommonTicker>(ticker.Data?.Select(d => d.Value).FirstOrDefault());
         }
 
@@ -113,7 +108,7 @@ namespace Kraken.Net.Clients.Rest.Spot
             if(!assets)
                 return new WebCallResult<IEnumerable<ICommonTicker>>(assets.ResponseStatusCode, assets.ResponseHeaders, null, assets.Error);
 
-            var ticker = await ExchangeData.GetTickersAsync(assets.Data.Select(d => d.Key).ToArray(), default).ConfigureAwait(false);
+            var ticker = await ExchangeData.GetTickersAsync(assets.Data.Select(d => d.Key).ToArray()).ConfigureAwait(false);
             return ticker.As<IEnumerable<ICommonTicker>>(ticker.Data?.Select(d => d.Value));
         }
 
@@ -141,7 +136,7 @@ namespace Kraken.Net.Clients.Rest.Spot
 
         async Task<WebCallResult<IEnumerable<ICommonRecentTrade>>> IExchangeClient.GetRecentTradesAsync(string symbol)
         {
-            var tradesResult = await ExchangeData.GetTradeHistoryAsync(symbol, null).ConfigureAwait(false);
+            var tradesResult = await ExchangeData.GetTradeHistoryAsync(symbol).ConfigureAwait(false);
             if (!tradesResult.Success)
                 return WebCallResult<IEnumerable<ICommonRecentTrade>>.CreateErrorResult(tradesResult.ResponseStatusCode, tradesResult.ResponseHeaders, tradesResult.Error!);
 

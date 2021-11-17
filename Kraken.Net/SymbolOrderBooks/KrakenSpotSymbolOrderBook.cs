@@ -8,7 +8,6 @@ using CryptoExchange.Net.OrderBook;
 using CryptoExchange.Net.Sockets;
 using Force.Crc32;
 using Kraken.Net.Clients.Socket;
-using Kraken.Net.Interfaces;
 using Kraken.Net.Interfaces.Clients.Socket;
 using Kraken.Net.Objects;
 using Kraken.Net.Objects.Models;

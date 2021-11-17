@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using CryptoExchange.Net.Interfaces;
-using CryptoExchange.Net.Objects;
-using Kraken.Net.Converters;
-using Kraken.Net.Enums;
-using Kraken.Net.Objects;
+﻿using CryptoExchange.Net.Interfaces;
 
 namespace Kraken.Net.Interfaces.Clients.Rest.Spot
 {

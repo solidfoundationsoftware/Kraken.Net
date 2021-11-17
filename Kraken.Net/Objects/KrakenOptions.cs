@@ -21,7 +21,7 @@ namespace Kraken.Net.Objects
             {
                  new RateLimiter()
                     .AddApiKeyLimit(15, TimeSpan.FromSeconds(45), false, false)
-                    .AddEndpointLimit(new string[] { "/private/AddOrder", "/private/CancelOrder", "/private/CancelAll", "/private/CancelAllOrdersAfter" }, 60, TimeSpan.FromSeconds(60), null, true),
+                    .AddEndpointLimit(new [] { "/private/AddOrder", "/private/CancelOrder", "/private/CancelAll", "/private/CancelAllOrdersAfter" }, 60, TimeSpan.FromSeconds(60), null, true),
 
             }
         };

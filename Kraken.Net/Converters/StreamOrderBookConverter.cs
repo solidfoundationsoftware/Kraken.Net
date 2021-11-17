@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Kraken.Net.Objects;
 using Kraken.Net.Objects.Internal;
 using Kraken.Net.Objects.Models;
 using Newtonsoft.Json.Linq;

@@ -11,7 +11,6 @@ using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
 using Kraken.Net.Converters;
 using Kraken.Net.Enums;
-using Kraken.Net.Interfaces;
 using Kraken.Net.Interfaces.Clients.Socket;
 using Kraken.Net.Objects;
 using Kraken.Net.Objects.Internal;
