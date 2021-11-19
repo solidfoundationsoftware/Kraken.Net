@@ -8,6 +8,9 @@ using Kraken.Net.Objects.Models;
 
 namespace Kraken.Net.Interfaces.Clients.Rest.Spot
 {
+    /// <summary>
+    /// Kraken trading endpoints, placing and mananging orders.
+    /// </summary>
     public interface IKrakenClientSpotTrading
     {
         /// <summary>

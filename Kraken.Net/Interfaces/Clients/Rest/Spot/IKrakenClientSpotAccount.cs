@@ -9,9 +9,11 @@ using Kraken.Net.Objects.Models.Socket;
 
 namespace Kraken.Net.Interfaces.Clients.Rest.Spot
 {
+    /// <summary>
+    /// Kraken account endpoints. Account endpoints include balance info, withdraw/deposit info and requesting and account settings
+    /// </summary>
     public interface IKrakenClientSpotAccount
     {
-
         /// <summary>
         /// Get balances
         /// <para><a href="https://docs.kraken.com/rest/#operation/getAccountBalance" /></para>

@@ -9,6 +9,9 @@ using Kraken.Net.Objects.Models;
 
 namespace Kraken.Net.Interfaces.Clients.Rest.Spot
 {
+    /// <summary>
+    /// Kraken exchange data endpoints. Exchange data includes market data (tickers, order books, etc) and system status.
+    /// </summary>
     public interface IKrakenClientSpotExchangeData
     {
         /// <summary>
