@@ -83,13 +83,7 @@ namespace Kraken.Net.Objects
         public string AuthBaseAddress
         {
             get => _authBaseAddress;
-            set
-            {
-                var newValue = value;
-                if (!newValue.EndsWith("/"))
-                    newValue += "/";
-                _authBaseAddress = newValue;
-            }
+            set => _authBaseAddress = value;
         }
 
         /// <summary>

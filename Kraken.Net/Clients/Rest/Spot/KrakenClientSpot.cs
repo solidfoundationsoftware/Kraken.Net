@@ -200,7 +200,7 @@ namespace Kraken.Net.Clients.Rest.Spot
 
         internal Uri GetUri(string endpoint)
         {
-            return new Uri(ClientOptions.BaseAddress + endpoint);
+            return new Uri(ClientOptions.BaseAddress.AppendPath(endpoint));
         }
 
         internal void InvokeOrderPlaced(ICommonOrderId id)
