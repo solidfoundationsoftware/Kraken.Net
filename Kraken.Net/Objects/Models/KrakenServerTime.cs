@@ -6,7 +6,7 @@ namespace Kraken.Net.Objects.Models
 {
     internal class KrakenServerTime
     {
-        [JsonConverter(typeof(TimestampSecondsConverter))]
+        [JsonConverter(typeof(DateTimeConverter))]
         public DateTime UnixTime { get; set; }
         [JsonProperty("rfc1123")]
         public string RfcTime { get; set; } = string.Empty;

@@ -91,7 +91,7 @@ namespace Kraken.Net.Clients.Rest.Spot
                 {"pair", symbol},
                 {"interval", JsonConvert.SerializeObject(interval, new KlineIntervalConverter(false))}
             };
-            parameters.AddOptionalParameter("since", since.HasValue ? JsonConvert.SerializeObject(since, new TimestampSecondsConverter()) : null);
+            parameters.AddOptionalParameter("since", DateTimeConverter.ConvertToSeconds(since));
             return await _baseClient.Execute<KrakenKlinesResult>(_baseClient.GetUri("0/public/OHLC"), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
         }
 
@@ -118,7 +118,7 @@ namespace Kraken.Net.Clients.Rest.Spot
             {
                 {"pair", symbol},
             };
-            parameters.AddOptionalParameter("since", since.HasValue ? JsonConvert.SerializeObject(since, new TimestampNanoSecondsConverter()) : null);
+            parameters.AddOptionalParameter("since", DateTimeConverter.ConvertToNanoseconds(since));
             return await _baseClient.Execute<KrakenTradesResult>(_baseClient.GetUri("0/public/Trades"), HttpMethod.Get, ct, parameters: parameters).ConfigureAwait(false);
         }
 
@@ -130,7 +130,7 @@ namespace Kraken.Net.Clients.Rest.Spot
             {
                 {"pair", symbol},
             };
-            parameters.AddOptionalParameter("since", since.HasValue ? JsonConvert.SerializeObject(since, new TimestampSecondsConverter()) : null);
+            parameters.AddOptionalParameter("since", DateTimeConverter.ConvertToSeconds(since));
             return await _baseClient.Execute<KrakenSpreadsResult>(_baseClient.GetUri("0/public/Spread"), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
         }
     }

@@ -37,22 +37,22 @@ namespace Kraken.Net.Objects.Models
         /// <summary>
         /// Open timestamp
         /// </summary>
-        [JsonProperty("opentm"), JsonConverter(typeof(TimestampSecondsConverter))]
+        [JsonProperty("opentm"), JsonConverter(typeof(DateTimeConverter))]
         public DateTime CreateTime { get; set; }
         /// <summary>
         /// Start timestamp
         /// </summary>
-        [JsonProperty("starttm"), JsonConverter(typeof(TimestampSecondsConverter))]
+        [JsonProperty("starttm"), JsonConverter(typeof(DateTimeConverter))]
         public DateTime StartTime { get; set; }
         /// <summary>
         /// Expire timestamp
         /// </summary>
-        [JsonProperty("expiretm"), JsonConverter(typeof(TimestampSecondsConverter))]
+        [JsonProperty("expiretm"), JsonConverter(typeof(DateTimeConverter))]
         public DateTime ExpireTime { get; set; }
         /// <summary>
         /// Close timestamp
         /// </summary>
-        [JsonProperty("closetm"), JsonConverter(typeof(TimestampSecondsConverter))]
+        [JsonProperty("closetm"), JsonConverter(typeof(DateTimeConverter))]
         public DateTime? CloseTime { get; set; }
 
         /// <summary>

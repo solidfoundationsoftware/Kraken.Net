@@ -48,8 +48,8 @@ namespace Kraken.Net.Clients.Rest.Spot
             var parameters = new Dictionary<string, object>();
             parameters.AddOptionalParameter("trades", true);
             parameters.AddOptionalParameter("userref", clientOrderId);
-            parameters.AddOptionalParameter("start", startTime.HasValue ? JsonConvert.SerializeObject(startTime.Value, new TimestampSecondsConverter()) : null);
-            parameters.AddOptionalParameter("end", endTime.HasValue ? JsonConvert.SerializeObject(endTime.Value, new TimestampSecondsConverter()) : null);
+            parameters.AddOptionalParameter("start", DateTimeConverter.ConvertToSeconds(startTime));
+            parameters.AddOptionalParameter("end", DateTimeConverter.ConvertToSeconds(endTime));
             parameters.AddOptionalParameter("ofs", resultOffset);
             parameters.AddOptionalParameter("otp", twoFactorPassword);
             var result = await _baseClient.Execute<KrakenClosedOrdersPage>(_baseClient.GetUri("0/private/ClosedOrders"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
@@ -87,8 +87,8 @@ namespace Kraken.Net.Clients.Rest.Spot
         {
             var parameters = new Dictionary<string, object>();
             parameters.AddOptionalParameter("trades", true);
-            parameters.AddOptionalParameter("start", startTime.HasValue ? JsonConvert.SerializeObject(startTime.Value, new TimestampSecondsConverter()) : null);
-            parameters.AddOptionalParameter("end", endTime.HasValue ? JsonConvert.SerializeObject(endTime.Value, new TimestampSecondsConverter()) : null);
+            parameters.AddOptionalParameter("start", DateTimeConverter.ConvertToSeconds(startTime));
+            parameters.AddOptionalParameter("end", DateTimeConverter.ConvertToSeconds(endTime));
             parameters.AddOptionalParameter("ofs", resultOffset);
             parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
             var result = await _baseClient.Execute<KrakenUserTradesPage>(_baseClient.GetUri("0/private/TradesHistory"), HttpMethod.Post, ct, parameters, true, weight: 2).ConfigureAwait(false);
@@ -153,8 +153,8 @@ namespace Kraken.Net.Clients.Rest.Spot
             parameters.AddOptionalParameter("price2", secondaryPrice?.ToString(CultureInfo.InvariantCulture));
             parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
             parameters.AddOptionalParameter("leverage", leverage?.ToString(CultureInfo.InvariantCulture));
-            parameters.AddOptionalParameter("starttm", startTime.HasValue ? JsonConvert.SerializeObject(startTime.Value, new TimestampSecondsConverter()) : null);
-            parameters.AddOptionalParameter("expiretm", expireTime.HasValue ? JsonConvert.SerializeObject(expireTime.Value, new TimestampSecondsConverter()) : null);
+            parameters.AddOptionalParameter("starttm", DateTimeConverter.ConvertToSeconds(startTime));
+            parameters.AddOptionalParameter("expiretm", DateTimeConverter.ConvertToSeconds(expireTime));
             if (validateOnly == true)
                 parameters.AddOptionalParameter("validate", true);
             var result = await _baseClient.Execute<KrakenPlacedOrder>(_baseClient.GetUri("0/private/AddOrder"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);

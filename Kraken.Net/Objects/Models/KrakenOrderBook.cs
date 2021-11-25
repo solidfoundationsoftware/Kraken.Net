@@ -55,7 +55,7 @@ namespace Kraken.Net.Objects.Models
         /// <summary>
         /// Timestamp of change
         /// </summary>
-        [ArrayProperty(2), JsonConverter(typeof(TimestampSecondsConverter))]
+        [ArrayProperty(2), JsonConverter(typeof(DateTimeConverter))]
         public DateTime Timestamp { get; set; }
     }
 
@@ -114,7 +114,7 @@ namespace Kraken.Net.Objects.Models
         /// <summary>
         /// Timestamp of the entry
         /// </summary>
-        [ArrayProperty(2), JsonConverter(typeof(TimestampSecondsConverter))]
+        [ArrayProperty(2), JsonConverter(typeof(DateTimeConverter))]
         public DateTime Timestamp { get; set; }
 
         /// <summary>

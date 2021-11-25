@@ -33,12 +33,12 @@ namespace Kraken.Net.Objects.Models
         /// <summary>
         /// Timestamp
         /// </summary>
-        [JsonProperty("time"), JsonConverter(typeof(TimestampSecondsConverter))]
+        [JsonProperty("time"), JsonConverter(typeof(DateTimeConverter))]
         public DateTime Timestamp { get; set; }
         /// <summary>
         /// Rollover time
         /// </summary>
-        [JsonProperty("rollovertm"), JsonConverter(typeof(TimestampSecondsConverter))]
+        [JsonProperty("rollovertm"), JsonConverter(typeof(DateTimeConverter))]
         public DateTime? RollOverTime { get; set; }
         /// <summary>
         /// Side

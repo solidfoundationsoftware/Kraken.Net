@@ -76,8 +76,8 @@ namespace Kraken.Net.Clients.Rest.Spot
             var parameters = new Dictionary<string, object>();
             parameters.AddOptionalParameter("asset", assets != null ? string.Join(",", assets) : null);
             parameters.AddOptionalParameter("type", entryTypes != null ? string.Join(",", entryTypes.Select(e => JsonConvert.SerializeObject(e, new LedgerEntryTypeConverter(false)))) : null);
-            parameters.AddOptionalParameter("start", startTime.HasValue ? JsonConvert.SerializeObject(startTime.Value, new TimestampSecondsConverter()) : null);
-            parameters.AddOptionalParameter("end", endTime.HasValue ? JsonConvert.SerializeObject(endTime.Value, new TimestampSecondsConverter()) : null);
+            parameters.AddOptionalParameter("start", DateTimeConverter.ConvertToSeconds(startTime));
+            parameters.AddOptionalParameter("end", DateTimeConverter.ConvertToSeconds(endTime));
             parameters.AddOptionalParameter("ofs", resultOffset);
             parameters.AddOptionalParameter("otp", twoFactorPassword ??  _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
             var result = await _baseClient.Execute<KrakenLedgerPage>(_baseClient.GetUri("0/private/Ledgers"), HttpMethod.Post, ct, parameters, true, weight: 2).ConfigureAwait(false);

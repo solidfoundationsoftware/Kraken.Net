@@ -13,7 +13,7 @@ namespace Kraken.Net.Objects.Models
         /// <summary>
         /// Timestamp of the data
         /// </summary>
-        [ArrayProperty(0), JsonConverter(typeof(TimestampSecondsConverter))]
+        [ArrayProperty(0), JsonConverter(typeof(DateTimeConverter))]
         public DateTime Timestamp { get; set; }
         /// <summary>
         /// Best bid price
@@ -46,7 +46,7 @@ namespace Kraken.Net.Objects.Models
         /// <summary>
         /// Timestamp of the data
         /// </summary>
-        [ArrayProperty(2), JsonConverter(typeof(TimestampSecondsConverter))]
+        [ArrayProperty(2), JsonConverter(typeof(DateTimeConverter))]
         public DateTime Timestamp { get; set; }
         /// <summary>
         /// Best bid quantity

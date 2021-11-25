@@ -26,7 +26,7 @@ namespace Kraken.Net.Objects.Models
         /// <summary>
         /// Timestamp of trade
         /// </summary>
-        [ArrayProperty(2), JsonConverter(typeof(TimestampSecondsConverter))]
+        [ArrayProperty(2), JsonConverter(typeof(DateTimeConverter))]
         public DateTime Timestamp { get; set; }
         /// <summary>
         /// Side

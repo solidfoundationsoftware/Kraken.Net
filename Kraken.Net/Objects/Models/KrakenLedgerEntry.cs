@@ -23,7 +23,7 @@ namespace Kraken.Net.Objects.Models
         /// <summary>
         /// Timestamp
         /// </summary>
-        [JsonProperty("time"), JsonConverter(typeof(TimestampSecondsConverter))]
+        [JsonProperty("time"), JsonConverter(typeof(DateTimeConverter))]
         public DateTime Timestamp { get; set; }
         /// <summary>
         /// The type of entry

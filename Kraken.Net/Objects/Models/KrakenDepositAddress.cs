@@ -16,7 +16,7 @@ namespace Kraken.Net.Objects.Models
         /// <summary>
         /// The expire time of the address
         /// </summary>
-        [JsonProperty("expiretm"), JsonConverter(typeof(TimestampSecondsConverter))]
+        [JsonProperty("expiretm"), JsonConverter(typeof(DateTimeConverter))]
         public DateTime ExpireTime { get; set; }
         /// <summary>
         /// If the address has been used before

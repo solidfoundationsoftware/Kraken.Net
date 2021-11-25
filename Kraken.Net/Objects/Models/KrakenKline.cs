@@ -14,7 +14,7 @@ namespace Kraken.Net.Objects.Models
         /// <summary>
         /// Timestamp of the kline
         /// </summary>
-        [ArrayProperty(0), JsonConverter(typeof(TimestampSecondsConverter))]
+        [ArrayProperty(0), JsonConverter(typeof(DateTimeConverter))]
         public DateTime OpenTime { get; set; }
         /// <summary>
         /// The open price for this kline
@@ -73,12 +73,12 @@ namespace Kraken.Net.Objects.Models
         /// <summary>
         /// Timestamp of the kline
         /// </summary>
-        [ArrayProperty(0), JsonConverter(typeof(TimestampSecondsConverter))]
+        [ArrayProperty(0), JsonConverter(typeof(DateTimeConverter))]
         public DateTime OpenTime { get; set; }
         /// <summary>
         /// The end time for the kline
         /// </summary>
-        [ArrayProperty(1), JsonConverter(typeof(TimestampSecondsConverter))]
+        [ArrayProperty(1), JsonConverter(typeof(DateTimeConverter))]
         public DateTime CloseTime { get; set; }
         /// <summary>
         /// The open price for this kline
