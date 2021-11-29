@@ -109,7 +109,7 @@ namespace Kraken.Net.UnitTests.TestImplementations
             return true;
         }
 
-        public static KrakenSocketClientSpot CreateSocketClient(IWebsocket socket, KrakenSocketClientSpotOptions? options = null)
+        public static KrakenSocketClientSpot CreateSocketClient(IWebsocket socket, KrakenSocketClientOptions? options = null)
         {
             KrakenSocketClientSpot client;
             client = options != null ? new KrakenSocketClientSpot(options) : new KrakenSocketClientSpot(new KrakenSocketClientSpotOptions() { LogLevel = LogLevel.Debug, ApiCredentials = new ApiCredentials("Test", "Test") });
@@ -118,7 +118,7 @@ namespace Kraken.Net.UnitTests.TestImplementations
             return client;
         }
 
-        public static KrakenSocketClientSpot CreateAuthenticatedSocketClient(IWebsocket socket, KrakenSocketClientSpotOptions? options = null)
+        public static KrakenSocketClientSpot CreateAuthenticatedSocketClient(IWebsocket socket, KrakenSocketClientOptions? options = null)
         {
             KrakenSocketClientSpot client;
             client = options != null ? new KrakenSocketClientSpot(options) : new KrakenSocketClientSpot(new KrakenSocketClientSpotOptions(){ LogLevel = LogLevel.Debug, ApiCredentials = new ApiCredentials("Test", "Test")});
@@ -127,7 +127,7 @@ namespace Kraken.Net.UnitTests.TestImplementations
             return client;
         }
 
-        public static IKrakenClientSpot CreateClient(KrakenClientSpotOptions? options = null)
+        public static IKrakenClientSpot CreateClient(KrakenClientOptions? options = null)
         {
             IKrakenClientSpot client;
             client = options != null ? new KrakenClientSpot(options) : new KrakenClientSpot(new KrakenClientSpotOptions(){LogLevel = LogLevel.Debug});
@@ -143,14 +143,14 @@ namespace Kraken.Net.UnitTests.TestImplementations
         }
 
 
-        public static IKrakenClientSpot CreateResponseClient(string response, KrakenClientSpotOptions? options = null)
+        public static IKrakenClientSpot CreateResponseClient(string response, KrakenClientOptions? options = null)
         {
             var client = (KrakenClientSpot)CreateClient(options);
             SetResponse(client, response);
             return client;
         }
 
-        public static IKrakenClientSpot CreateResponseClient<T>(T response, KrakenClientSpotOptions? options = null)
+        public static IKrakenClientSpot CreateResponseClient<T>(T response, KrakenClientOptions? options = null)
         {
             var client = (KrakenClientSpot)CreateClient(options);
             SetResponse(client, JsonConvert.SerializeObject(response));

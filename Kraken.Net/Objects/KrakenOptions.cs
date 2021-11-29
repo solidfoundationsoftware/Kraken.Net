@@ -9,20 +9,23 @@ namespace Kraken.Net.Objects
     /// <summary>
     /// Options for the Kraken client
     /// </summary>
-    public class KrakenClientSpotOptions : RestClientOptions
+    public class KrakenClientOptions : RestClientOptions
     {
         /// <summary>
         /// Default options for the spot client
         /// </summary>
-        public static KrakenClientSpotOptions Default { get; set; } = new KrakenClientSpotOptions()
+        public static KrakenClientOptions Default { get; set; } = new KrakenClientOptions()
         {
-            BaseAddress = "https://api.kraken.com",
-            RateLimiters = new List<IRateLimiter>
+            OptionsSpot = new RestSubClientOptions
             {
-                 new RateLimiter()
-                    .AddApiKeyLimit(15, TimeSpan.FromSeconds(45), false, false)
-                    .AddEndpointLimit(new [] { "/private/AddOrder", "/private/CancelOrder", "/private/CancelAll", "/private/CancelAllOrdersAfter" }, 60, TimeSpan.FromSeconds(60), null, true),
+                BaseAddress = "https://api.kraken.com",
+                RateLimiters = new List<IRateLimiter>
+                {
+                     new RateLimiter()
+                        .AddApiKeyLimit(15, TimeSpan.FromSeconds(45), false, false)
+                        .AddEndpointLimit(new [] { "/private/AddOrder", "/private/CancelOrder", "/private/CancelAll", "/private/CancelAllOrdersAfter" }, 60, TimeSpan.FromSeconds(60), null, true),
 
+                }
             }
         };
 
@@ -36,10 +39,13 @@ namespace Kraken.Net.Objects
         /// </summary>
         public INonceProvider? NonceProvider { get; set; }
 
+        public RestSubClientOptions OptionsSpot { get; set; }
+
+
         /// <summary>
         /// Ctor
         /// </summary>
-        public KrakenClientSpotOptions()
+        public KrakenClientOptions()
         {
             if (Default == null)
                 return;
@@ -53,43 +59,57 @@ namespace Kraken.Net.Objects
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
         /// <param name="def"></param>
-        public new void Copy<T>(T input, T def) where T : KrakenClientSpotOptions
+        public new void Copy<T>(T input, T def) where T : KrakenClientOptions
         {
             base.Copy(input, def);
 
             input.NonceProvider = def.NonceProvider;
             input.StaticTwoFactorAuthenticationPassword = def.StaticTwoFactorAuthenticationPassword;
+
+            input.OptionsSpot = new RestSubClientOptions();
+            def.OptionsSpot.Copy(input.OptionsSpot, def.OptionsSpot);
+        }
+    }
+
+    public class KrakenSubSocketClientOptions : SocketSubClientOptions
+    {
+        /// <summary>
+        /// The base address for the authenticated websocket
+        /// </summary>
+        public string BaseAddressAuthenticated { get; set; }
+
+                public new void Copy<T>(T input, T def) where T : KrakenSubSocketClientOptions
+        {
+            base.Copy(input, def);
+
+            input.BaseAddressAuthenticated = def.BaseAddressAuthenticated;
         }
     }
 
     /// <summary>
     /// Options for the Kraken socket client
     /// </summary>
-    public class KrakenSocketClientSpotOptions : SocketClientOptions
+    public class KrakenSocketClientOptions : SocketClientOptions
     {
         /// <summary>
         /// Default options for the spot client
         /// </summary>
-        public static KrakenSocketClientSpotOptions Default { get; set; } = new KrakenSocketClientSpotOptions()
+        public static KrakenSocketClientOptions Default { get; set; } = new KrakenSocketClientOptions()
         {
-            BaseAddress = "wss://ws.kraken.com",
+            OptionsSpot = new KrakenSubSocketClientOptions
+            {
+                BaseAddress = "wss://ws.kraken.com",
+                BaseAddressAuthenticated = "wss://ws-auth.kraken.com/"
+            },
             SocketSubscriptionsCombineTarget = 10
         };
 
-        private string _authBaseAddress = "wss://ws-auth.kraken.com/";
-        /// <summary>
-        /// The base address for authenticated subscriptions
-        /// </summary>
-        public string AuthBaseAddress
-        {
-            get => _authBaseAddress;
-            set => _authBaseAddress = value;
-        }
+        public KrakenSubSocketClientOptions OptionsSpot { get; set; }
 
         /// <summary>
         /// Ctor
         /// </summary>
-        public KrakenSocketClientSpotOptions()
+        public KrakenSocketClientOptions()
         {
             if (Default == null)
                 return;
@@ -103,11 +123,12 @@ namespace Kraken.Net.Objects
         /// <typeparam name="T"></typeparam>
         /// <param name="input"></param>
         /// <param name="def"></param>
-        public new void Copy<T>(T input, T def) where T : KrakenSocketClientSpotOptions
+        public new void Copy<T>(T input, T def) where T : KrakenSocketClientOptions
         {
             base.Copy(input, def);
 
-            input.AuthBaseAddress = def.AuthBaseAddress;
+            input.OptionsSpot = new KrakenSubSocketClientOptions();
+            def.OptionsSpot.Copy(input.OptionsSpot, def.OptionsSpot);
         }
     }
 
@@ -119,12 +140,12 @@ namespace Kraken.Net.Objects
         /// <summary>
         /// The client to use for the socket connection. When using the same client for multiple order books the connection can be shared.
         /// </summary>
-        public IKrakenSocketClientSpot? SocketClient { get; }
+        public IKrakenSocketClient? SocketClient { get; }
 
         /// <summary>
         /// </summary>
         /// <param name="client">The client to use for the socket connection. When using the same client for multiple order books the connection can be shared.</param>
-        public KrakenOrderBookOptions(IKrakenSocketClientSpot? client = null)
+        public KrakenOrderBookOptions(IKrakenSocketClient? client = null)
         {
             SocketClient = client;
         }

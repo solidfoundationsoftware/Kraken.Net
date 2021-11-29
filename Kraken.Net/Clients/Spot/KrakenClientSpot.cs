@@ -20,10 +20,11 @@ namespace Kraken.Net.Clients.Rest.Spot
     /// <summary>
     /// Client for the Kraken Rest API
     /// </summary>
-    public class KrakenClientSpot: RestClient, IKrakenClientSpot, IExchangeClient
+    public class KrakenClientSpot: RestSubClient, IKrakenClientSpot, IExchangeClient
     {
         #region fields
-        public new KrakenClientSpotOptions ClientOptions { get; }
+        public new KrakenClientOptions ClientOptions { get; }
+        private KrakenClient _baseClient;
         #endregion
 
         #region Subclients
@@ -45,46 +46,15 @@ namespace Kraken.Net.Clients.Rest.Spot
         /// <summary>
         /// Create a new instance of KrakenClient using the default options
         /// </summary>
-        public KrakenClientSpot() : this(KrakenClientSpotOptions.Default)
+        public KrakenClientSpot(KrakenClient baseClient, KrakenClientOptions options)
+            : base(options.OptionsSpot, options.OptionsSpot.ApiCredentials == null ? null : new KrakenAuthenticationProvider(options.OptionsSpot.ApiCredentials, options.NonceProvider))
         {
-        }
-
-        /// <summary>
-        /// Create a new instance of KrakenClient using provided options
-        /// </summary>
-        /// <param name="options">The options to use for this client</param>
-        public KrakenClientSpot(KrakenClientSpotOptions options) : base("Kraken", options, options.ApiCredentials == null ? null : new KrakenAuthenticationProvider(options.ApiCredentials, options.NonceProvider))
-        {
-            ClientOptions = options;
-            requestBodyFormat = RequestBodyFormat.FormData;
+            _baseClient = baseClient;
 
             Account = new KrakenClientSpotAccount(this);
             ExchangeData = new KrakenClientSpotExchangeData(this);
             Trading = new KrakenClientSpotTrading(this);
         }
-        #endregion
-
-        #region methods
-        /// <summary>
-        /// Set the default options to be used when creating new clients
-        /// </summary>
-        /// <param name="options"></param>
-        public static void SetDefaultOptions(KrakenClientSpotOptions options)
-        {
-            KrakenClientSpotOptions.Default = options;
-        }
-
-        /// <summary>
-        /// Set the API key and secret
-        /// </summary>
-        /// <param name="apiKey">The api key</param>
-        /// <param name="apiSecret">The api secret</param>
-        /// <param name="nonceProvider">Optional nonce provider. Careful providing a custom provider; once a nonce is sent to the server, every request after that needs a higher nonce than that</param>
-        public void SetApiCredentials(string apiKey, string apiSecret, INonceProvider? nonceProvider = null)
-        {
-            SetAuthenticationProvider(new KrakenAuthenticationProvider(new ApiCredentials(apiKey, apiSecret), nonceProvider));
-        }
-                
         #endregion
 
         #region common interface
@@ -189,18 +159,10 @@ namespace Kraken.Net.Clients.Rest.Spot
         }
 
         #endregion
-        /// <inheritdoc />
-        protected override void WriteParamBody(IRequest request, Dictionary<string, object> parameters, string contentType)
-        {
-            if (parameters.TryGetValue("nonce", out var nonce))
-                log.Write(Microsoft.Extensions.Logging.LogLevel.Trace, $"[{request.RequestId}] Nonce: " + nonce);
-            var stringData = string.Join("&", parameters.OrderBy(p => p.Key != "nonce").Select(p => $"{p.Key}={p.Value}"));
-            request.SetContent(stringData, contentType);
-        }
-
+        
         internal Uri GetUri(string endpoint)
         {
-            return new Uri(ClientOptions.BaseAddress.AppendPath(endpoint));
+            return new Uri(BaseAddress.AppendPath(endpoint));
         }
 
         internal void InvokeOrderPlaced(ICommonOrderId id)
@@ -213,17 +175,8 @@ namespace Kraken.Net.Clients.Rest.Spot
             OnOrderCanceled?.Invoke(id);
         }
 
-        internal async Task<WebCallResult<T>> Execute<T>(Uri url, HttpMethod method, CancellationToken ct, Dictionary<string, object>? parameters = null, bool signed = false, int weight = 1)
-        {
-            var result = await SendRequestAsync<KrakenResult<T>>(url, method, ct, parameters, signed, requestWeight: weight).ConfigureAwait(false);
-            if (!result)
-                return new WebCallResult<T>(result.ResponseStatusCode, result.ResponseHeaders, default, result.Error);
-
-            if (result.Data.Error.Any())
-                return new WebCallResult<T>(result.ResponseStatusCode, result.ResponseHeaders, default, new ServerError(string.Join(", ", result.Data.Error)));
-
-            return result.As<T>(result.Data.Result);
-        }
+        internal Task<WebCallResult<T>> Execute<T>(Uri url, HttpMethod method, CancellationToken ct, Dictionary<string, object>? parameters = null, bool signed = false, int weight = 1)
+            => _baseClient.Execute<T>(this, url, method, ct, parameters, signed, weight);
 #pragma warning restore 1066
 
         /// <summary>

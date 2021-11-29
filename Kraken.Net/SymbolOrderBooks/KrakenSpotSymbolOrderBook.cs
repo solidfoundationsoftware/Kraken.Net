@@ -20,7 +20,7 @@ namespace Kraken.Net.SymbolOrderBooks
     /// </summary>
     public class KrakenSpotSymbolOrderBook : SymbolOrderBook
     {
-        private readonly IKrakenSocketClientSpot socketClient;
+        private readonly IKrakenSocketClient socketClient;
         private readonly bool _socketOwner;
         private bool initialSnapshotDone;
 
@@ -30,12 +30,12 @@ namespace Kraken.Net.SymbolOrderBooks
         /// <param name="symbol">The symbol the order book is for</param>
         /// <param name="limit">The initial limit of entries in the order book</param>
         /// <param name="options">Options for the order book</param>
-        public KrakenSpotSymbolOrderBook(string symbol, int limit, KrakenOrderBookOptions? options = null) : base("Kraken[Spot]", symbol, options ?? new KrakenOrderBookOptions())
+        public KrakenSpotSymbolOrderBook(string symbol, int limit, KrakenOrderBookOptions? options = null) : base("Kraken", symbol, options ?? new KrakenOrderBookOptions())
         {
             sequencesAreConsecutive = false;
             strictLevels = true;
 
-            socketClient = options?.SocketClient ?? new KrakenSocketClientSpot(new KrakenSocketClientSpotOptions
+            socketClient = options?.SocketClient ?? new KrakenSocketClient(new KrakenSocketClientOptions
             {
                 LogLevel = options?.LogLevel ?? LogLevel.Information
             });
@@ -47,7 +47,7 @@ namespace Kraken.Net.SymbolOrderBooks
         /// <inheritdoc />
         protected override async Task<CallResult<UpdateSubscription>> DoStartAsync()
         {
-            var result = await socketClient.SubscribeToOrderBookUpdatesAsync(Symbol, Levels!.Value, ProcessUpdate).ConfigureAwait(false);
+            var result = await socketClient.SpotMarket.SubscribeToOrderBookUpdatesAsync(Symbol, Levels!.Value, ProcessUpdate).ConfigureAwait(false);
             if (!result)
                 return result;
 
