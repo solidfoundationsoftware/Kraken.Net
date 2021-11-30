@@ -254,5 +254,11 @@ namespace Kraken.Net.Clients.Socket
             }).ConfigureAwait(false);
             return result;
         }
+
+        public override void Dispose()
+        {
+            SpotMarket.Dispose();
+            base.Dispose();
+        }
     }
 }

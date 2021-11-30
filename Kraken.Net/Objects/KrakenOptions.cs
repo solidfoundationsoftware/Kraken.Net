@@ -71,7 +71,7 @@ namespace Kraken.Net.Objects
         }
     }
 
-    public class KrakenSubSocketClientOptions : SocketSubClientOptions
+    public class KrakenSubSocketClientOptions : SubClientOptions
     {
         /// <summary>
         /// The base address for the authenticated websocket

@@ -92,5 +92,11 @@ namespace Kraken.Net.Clients.Rest.Spot
 
             return result.As<T>(result.Data.Result);
         }
+
+        public override void Dispose()
+        {
+            SpotMarket.Dispose();
+            base.Dispose();
+        }
     }
 }

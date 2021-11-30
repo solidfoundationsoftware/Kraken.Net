@@ -14,7 +14,7 @@ namespace Kraken.Net.Interfaces.Clients.Socket
     /// <summary>
     /// Interface for the Kraken socket client
     /// </summary>
-    public interface IKrakenSocketClientSpotMarket
+    public interface IKrakenSocketClientSpotMarket: IDisposable
     {
         /// <summary>
         /// Subscribe to system status updates
