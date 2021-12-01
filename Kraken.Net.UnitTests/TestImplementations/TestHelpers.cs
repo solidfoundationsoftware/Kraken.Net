@@ -109,55 +109,55 @@ namespace Kraken.Net.UnitTests.TestImplementations
             return true;
         }
 
-        public static KrakenSocketClientSpot CreateSocketClient(IWebsocket socket, KrakenSocketClientOptions? options = null)
+        public static KrakenSocketClient CreateSocketClient(IWebsocket socket, KrakenSocketClientOptions? options = null)
         {
-            KrakenSocketClientSpot client;
-            client = options != null ? new KrakenSocketClientSpot(options) : new KrakenSocketClientSpot(new KrakenSocketClientSpotOptions() { LogLevel = LogLevel.Debug, ApiCredentials = new ApiCredentials("Test", "Test") });
+            KrakenSocketClient client;
+            client = options != null ? new KrakenSocketClient(options) : new KrakenSocketClient(new KrakenSocketClientOptions() { LogLevel = LogLevel.Debug, ApiCredentials = new ApiCredentials("Test", "Test") });
             client.SocketFactory = Mock.Of<IWebsocketFactory>();
             Mock.Get(client.SocketFactory).Setup(f => f.CreateWebsocket(It.IsAny<Log>(), It.IsAny<string>())).Returns(socket);
             return client;
         }
 
-        public static KrakenSocketClientSpot CreateAuthenticatedSocketClient(IWebsocket socket, KrakenSocketClientOptions? options = null)
+        public static KrakenSocketClient CreateAuthenticatedSocketClient(IWebsocket socket, KrakenSocketClientOptions? options = null)
         {
-            KrakenSocketClientSpot client;
-            client = options != null ? new KrakenSocketClientSpot(options) : new KrakenSocketClientSpot(new KrakenSocketClientSpotOptions(){ LogLevel = LogLevel.Debug, ApiCredentials = new ApiCredentials("Test", "Test")});
+            KrakenSocketClient client;
+            client = options != null ? new KrakenSocketClient(options) : new KrakenSocketClient(new KrakenSocketClientOptions(){ LogLevel = LogLevel.Debug, ApiCredentials = new ApiCredentials("Test", "Test")});
             client.SocketFactory = Mock.Of<IWebsocketFactory>();
             Mock.Get(client.SocketFactory).Setup(f => f.CreateWebsocket(It.IsAny<Log>(), It.IsAny<string>())).Returns(socket);
             return client;
         }
 
-        public static IKrakenClientSpot CreateClient(KrakenClientOptions? options = null)
+        public static IKrakenClient CreateClient(KrakenClientOptions? options = null)
         {
-            IKrakenClientSpot client;
-            client = options != null ? new KrakenClientSpot(options) : new KrakenClientSpot(new KrakenClientSpotOptions(){LogLevel = LogLevel.Debug});
+            IKrakenClient client;
+            client = options != null ? new KrakenClient(options) : new KrakenClient(new KrakenClientOptions(){LogLevel = LogLevel.Debug});
             client.RequestFactory = Mock.Of<IRequestFactory>();
             return client;
         }
 
-        public static IKrakenClientSpot CreateAuthResponseClient(string response, HttpStatusCode code = HttpStatusCode.OK)
+        public static IKrakenClient CreateAuthResponseClient(string response, HttpStatusCode code = HttpStatusCode.OK)
         {
-            var client = (KrakenClientSpot)CreateClient(new KrakenClientSpotOptions(){ ApiCredentials = new ApiCredentials("Test", "Test")});
+            var client = (KrakenClient)CreateClient(new KrakenClientOptions(){ ApiCredentials = new ApiCredentials("Test", "Test")});
             SetResponse(client, response, code);
             return client;
         }
 
 
-        public static IKrakenClientSpot CreateResponseClient(string response, KrakenClientOptions? options = null)
+        public static IKrakenClient CreateResponseClient(string response, KrakenClientOptions? options = null)
         {
-            var client = (KrakenClientSpot)CreateClient(options);
+            var client = (KrakenClient)CreateClient(options);
             SetResponse(client, response);
             return client;
         }
 
-        public static IKrakenClientSpot CreateResponseClient<T>(T response, KrakenClientOptions? options = null)
+        public static IKrakenClient CreateResponseClient<T>(T response, KrakenClientOptions? options = null)
         {
-            var client = (KrakenClientSpot)CreateClient(options);
+            var client = (KrakenClient)CreateClient(options);
             SetResponse(client, JsonConvert.SerializeObject(response));
             return client;
         }
 
-        public static void SetResponse(RestClient client, string responseData, HttpStatusCode code = HttpStatusCode.OK)
+        public static void SetResponse(BaseRestClient client, string responseData, HttpStatusCode code = HttpStatusCode.OK)
         {
             var expectedBytes = Encoding.UTF8.GetBytes(responseData);
             var responseStream = new MemoryStream();

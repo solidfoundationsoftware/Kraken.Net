@@ -25,11 +25,11 @@ namespace Kraken.Net.Clients.Socket
     /// <summary>
     /// Client for the Kraken websocket API
     /// </summary>
-    public class KrakenSocketClient: SocketClient, IKrakenSocketClient
+    public class KrakenSocketClient: BaseSocketClient, IKrakenSocketClient
     {
-        #region SubClients
+        #region Api clients
 
-        public IKrakenSocketClientSpotMarket SpotMarket { get; }
+        public IKrakenSocketClientSpotMarket SpotStreams { get; }
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace Kraken.Net.Clients.Socket
             AddGenericHandler("HeartBeat", (messageEvent) => { });
             AddGenericHandler("SystemStatus", (messageEvent) => { });
 
-            SpotMarket = new KrakenSocketClientSpotMarket(log, this, options);
+            SpotStreams = new KrakenSocketClientSpotMarket(log, this, options);
         }
         #endregion
 
@@ -67,23 +67,23 @@ namespace Kraken.Net.Clients.Socket
 
         #endregion
 
-        internal Task<CallResult<UpdateSubscription>> SubscribeInternalAsync<T>(SocketSubClient subClient, object? request, string? identifier, bool authenticated, Action<DataEvent<T>> dataHandler, CancellationToken ct)
+        internal Task<CallResult<UpdateSubscription>> SubscribeInternalAsync<T>(SocketApiClient apiClient, object? request, string? identifier, bool authenticated, Action<DataEvent<T>> dataHandler, CancellationToken ct)
         {
-            return SubscribeAsync(subClient, request, identifier, authenticated, dataHandler, ct);
+            return SubscribeAsync(apiClient, request, identifier, authenticated, dataHandler, ct);
         }
 
-        internal Task<CallResult<UpdateSubscription>> SubscribeInternalAsync<T>(SocketSubClient subClient, string url, object? request, string? identifier, bool authenticated, Action<DataEvent<T>> dataHandler, CancellationToken ct)
+        internal Task<CallResult<UpdateSubscription>> SubscribeInternalAsync<T>(SocketApiClient apiClient, string url, object? request, string? identifier, bool authenticated, Action<DataEvent<T>> dataHandler, CancellationToken ct)
         {
-            return SubscribeAsync(subClient, url, request, identifier, authenticated, dataHandler, ct);
+            return SubscribeAsync(apiClient, url, request, identifier, authenticated, dataHandler, ct);
         }
 
-        internal Task<CallResult<T>> QueryInternalAsync<T>(SocketSubClient subClient, string url, object request, bool authenticated)
-            => QueryAsync<T>(subClient, url, request, authenticated);
+        internal Task<CallResult<T>> QueryInternalAsync<T>(SocketApiClient apiClient, string url, object request, bool authenticated)
+            => QueryAsync<T>(apiClient, url, request, authenticated);
 
         internal int NextIdInternal() => NextId();
 
-        internal Task<CallResult<T>> QueryInternalAsync<T>(SocketSubClient subClient, object request, bool authenticated)
-            => QueryAsync<T>(subClient, request, authenticated);
+        internal Task<CallResult<T>> QueryInternalAsync<T>(SocketApiClient apiClient, object request, bool authenticated)
+            => QueryAsync<T>(apiClient, request, authenticated);
 
         internal CallResult<T> DeserializeInternal<T>(JToken obj, JsonSerializer? serializer = null, int? requestId = null)
             => Deserialize<T>(obj, serializer, requestId);
@@ -257,7 +257,7 @@ namespace Kraken.Net.Clients.Socket
 
         public override void Dispose()
         {
-            SpotMarket.Dispose();
+            SpotStreams.Dispose();
             base.Dispose();
         }
     }

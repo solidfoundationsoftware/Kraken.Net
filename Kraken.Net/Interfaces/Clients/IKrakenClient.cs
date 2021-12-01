@@ -10,7 +10,7 @@ namespace Kraken.Net.Interfaces.Clients.Rest.Spot
         /// <summary>
         /// Endpoints related to account settings, info or actions
         /// </summary>
-        IKrakenClientSpot SpotMarket { get; }
+        IKrakenClientSpot SpotApi { get; }
 
     }
 }

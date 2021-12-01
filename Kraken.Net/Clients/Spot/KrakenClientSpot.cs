@@ -20,14 +20,14 @@ namespace Kraken.Net.Clients.Rest.Spot
     /// <summary>
     /// Client for the Kraken Rest API
     /// </summary>
-    public class KrakenClientSpot: RestSubClient, IKrakenClientSpot, IExchangeClient
+    public class KrakenClientSpot: RestApiClient, IKrakenClientSpot, IExchangeClient
     {
         #region fields
         public new KrakenClientOptions ClientOptions { get; }
         private KrakenClient _baseClient;
         #endregion
 
-        #region Subclients
+        #region Api clients
         public IKrakenClientSpotAccount Account { get; }
         public IKrakenClientSpotExchangeData ExchangeData { get; }
         public IKrakenClientSpotTrading Trading { get; }
@@ -47,8 +47,9 @@ namespace Kraken.Net.Clients.Rest.Spot
         /// Create a new instance of KrakenClient using the default options
         /// </summary>
         public KrakenClientSpot(KrakenClient baseClient, KrakenClientOptions options)
-            : base(options.OptionsSpot, options.OptionsSpot.ApiCredentials == null ? null : new KrakenAuthenticationProvider(options.OptionsSpot.ApiCredentials, options.NonceProvider))
+            : base(options, options.SpotApiOptions)
         {
+            ClientOptions = options;
             _baseClient = baseClient;
 
             Account = new KrakenClientSpotAccount(this);
@@ -56,6 +57,9 @@ namespace Kraken.Net.Clients.Rest.Spot
             Trading = new KrakenClientSpotTrading(this);
         }
         #endregion
+
+        public override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
+            => new KrakenAuthenticationProvider(credentials, ClientOptions.NonceProvider ?? new KrakenNonceProvider());
 
         #region common interface
 

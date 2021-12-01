@@ -68,7 +68,7 @@ namespace Kraken.Net.UnitTests
             var client = TestHelpers.CreateAuthResponseClient($"{{\"error\": [\"first error\", \"another error\"], \"result\": null}}");
 
             // act
-            var result = await client.ExchangeData.GetSymbolsAsync();
+            var result = await client.SpotApi.ExchangeData.GetSymbolsAsync();
 
             // assert
             Assert.IsFalse(result.Success);
@@ -83,7 +83,7 @@ namespace Kraken.Net.UnitTests
             var client = TestHelpers.CreateAuthResponseClient($"Error request", System.Net.HttpStatusCode.BadRequest);
 
             // act
-            var result = await client.ExchangeData.GetSymbolsAsync();
+            var result = await client.SpotApi.ExchangeData.GetSymbolsAsync();
 
             // assert
             Assert.IsFalse(result.Success);
@@ -162,7 +162,7 @@ namespace Kraken.Net.UnitTests
         [Test]
         public void CheckSocketInterfaces()
         {
-            var assembly = Assembly.GetAssembly(typeof(KrakenSocketClientSpot));
+            var assembly = Assembly.GetAssembly(typeof(KrakenSocketClient));
             var clientInterfaces = assembly.GetTypes().Where(t => t.Name.StartsWith("IKrakenSocketClientSpot"));
 
             foreach (var clientInterface in clientInterfaces)

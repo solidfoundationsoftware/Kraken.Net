@@ -26,13 +26,14 @@ namespace Kraken.Net.Clients.Socket
     /// <summary>
     /// Client for the Kraken websocket API
     /// </summary>
-    public class KrakenSocketClientSpotMarket : SocketSubClient, IKrakenSocketClientSpotMarket
+    public class KrakenSocketClientSpotMarket : SocketApiClient, IKrakenSocketClientSpotMarket
     {
         #region fields                
         private readonly string _authBaseAddress;
         private readonly Dictionary<string, string> _symbolSynonyms;
 
         private readonly Log _log;
+        private readonly KrakenSocketClientOptions _options;
         private readonly KrakenSocketClient _baseClient;
         #endregion
 
@@ -42,10 +43,12 @@ namespace Kraken.Net.Clients.Socket
         /// Create a new instance of KrakenSocketClient using provided options
         /// </summary>
         /// <param name="options">The options to use for this client</param>
-        public KrakenSocketClientSpotMarket(Log log, KrakenSocketClient baseClient, KrakenSocketClientOptions options) : base(options.OptionsSpot, options.OptionsSpot.ApiCredentials == null ? null : new KrakenAuthenticationProvider(options.OptionsSpot.ApiCredentials, null))
+        public KrakenSocketClientSpotMarket(Log log, KrakenSocketClient baseClient, KrakenSocketClientOptions options) : 
+            base(options, options.SpotStreamsOptions)
         {
-            _authBaseAddress = options.OptionsSpot.BaseAddressAuthenticated;
+            _authBaseAddress = options.SpotStreamsOptions.BaseAddressAuthenticated;
             _log = log;
+            _options = options;
             _baseClient = baseClient;
 
             _symbolSynonyms = new Dictionary<string, string>
@@ -55,6 +58,9 @@ namespace Kraken.Net.Clients.Socket
             };
         }
         #endregion
+
+        public override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
+            => new KrakenAuthenticationProvider(credentials, _options.NonceProvider ?? new KrakenNonceProvider());
 
         #region methods
 

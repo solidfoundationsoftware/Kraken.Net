@@ -47,7 +47,7 @@ namespace Kraken.Net.SymbolOrderBooks
         /// <inheritdoc />
         protected override async Task<CallResult<UpdateSubscription>> DoStartAsync()
         {
-            var result = await socketClient.SpotMarket.SubscribeToOrderBookUpdatesAsync(Symbol, Levels!.Value, ProcessUpdate).ConfigureAwait(false);
+            var result = await socketClient.SpotStreams.SubscribeToOrderBookUpdatesAsync(Symbol, Levels!.Value, ProcessUpdate).ConfigureAwait(false);
             if (!result)
                 return result;
 

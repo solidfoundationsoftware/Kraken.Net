@@ -9,25 +9,12 @@ namespace Kraken.Net.Objects
     /// <summary>
     /// Options for the Kraken client
     /// </summary>
-    public class KrakenClientOptions : RestClientOptions
+    public class KrakenClientOptions : BaseRestClientOptions
     {
         /// <summary>
         /// Default options for the spot client
         /// </summary>
-        public static KrakenClientOptions Default { get; set; } = new KrakenClientOptions()
-        {
-            OptionsSpot = new RestSubClientOptions
-            {
-                BaseAddress = "https://api.kraken.com",
-                RateLimiters = new List<IRateLimiter>
-                {
-                     new RateLimiter()
-                        .AddApiKeyLimit(15, TimeSpan.FromSeconds(45), false, false)
-                        .AddEndpointLimit(new [] { "/private/AddOrder", "/private/CancelOrder", "/private/CancelAll", "/private/CancelAllOrdersAfter" }, 60, TimeSpan.FromSeconds(60), null, true),
-
-                }
-            }
-        };
+        public static KrakenClientOptions Default { get; set; } = new KrakenClientOptions();
 
         /// <summary>
         /// The static password configured as two-factor authentication for the API key. Will be send as otp parameter on private requests.
@@ -39,7 +26,20 @@ namespace Kraken.Net.Objects
         /// </summary>
         public INonceProvider? NonceProvider { get; set; }
 
-        public RestSubClientOptions OptionsSpot { get; set; }
+        private RestApiClientOptions _spotApiOptions = new RestApiClientOptions("https://api.kraken.com")
+        {
+            RateLimiters = new List<IRateLimiter>
+            {
+                    new RateLimiter()
+                        .AddApiKeyLimit(15, TimeSpan.FromSeconds(45), false, false)
+                        .AddEndpointLimit(new [] { "/private/AddOrder", "/private/CancelOrder", "/private/CancelAll", "/private/CancelAllOrdersAfter" }, 60, TimeSpan.FromSeconds(60), null, true),
+            }
+        };
+        public RestApiClientOptions SpotApiOptions
+        {
+            get => _spotApiOptions;
+            set => _spotApiOptions.Copy(_spotApiOptions, value);
+        }
 
 
         /// <summary>
@@ -66,45 +66,34 @@ namespace Kraken.Net.Objects
             input.NonceProvider = def.NonceProvider;
             input.StaticTwoFactorAuthenticationPassword = def.StaticTwoFactorAuthenticationPassword;
 
-            input.OptionsSpot = new RestSubClientOptions();
-            def.OptionsSpot.Copy(input.OptionsSpot, def.OptionsSpot);
-        }
-    }
-
-    public class KrakenSubSocketClientOptions : SubClientOptions
-    {
-        /// <summary>
-        /// The base address for the authenticated websocket
-        /// </summary>
-        public string BaseAddressAuthenticated { get; set; }
-
-                public new void Copy<T>(T input, T def) where T : KrakenSubSocketClientOptions
-        {
-            base.Copy(input, def);
-
-            input.BaseAddressAuthenticated = def.BaseAddressAuthenticated;
+            input.SpotApiOptions = new RestApiClientOptions(def.SpotApiOptions);
         }
     }
 
     /// <summary>
     /// Options for the Kraken socket client
     /// </summary>
-    public class KrakenSocketClientOptions : SocketClientOptions
+    public class KrakenSocketClientOptions : BaseSocketClientOptions
     {
         /// <summary>
         /// Default options for the spot client
         /// </summary>
         public static KrakenSocketClientOptions Default { get; set; } = new KrakenSocketClientOptions()
         {
-            OptionsSpot = new KrakenSubSocketClientOptions
-            {
-                BaseAddress = "wss://ws.kraken.com",
-                BaseAddressAuthenticated = "wss://ws-auth.kraken.com/"
-            },
             SocketSubscriptionsCombineTarget = 10
         };
 
-        public KrakenSubSocketClientOptions OptionsSpot { get; set; }
+        /// <summary>
+        /// Optional nonce provider for signing requests. Careful providing a custom provider; once a nonce is sent to the server, every request after that needs a higher nonce than that
+        /// </summary>
+        public INonceProvider? NonceProvider { get; set; }
+
+        private KrakenSocketApiClientOptions _spotStreamsOptions = new KrakenSocketApiClientOptions("wss://ws.kraken.com", "wss://ws-auth.kraken.com/");
+        public KrakenSocketApiClientOptions SpotStreamsOptions
+        {
+            get => _spotStreamsOptions;
+            set => _spotStreamsOptions.Copy(_spotStreamsOptions, value);
+        }
 
         /// <summary>
         /// Ctor
@@ -127,8 +116,37 @@ namespace Kraken.Net.Objects
         {
             base.Copy(input, def);
 
-            input.OptionsSpot = new KrakenSubSocketClientOptions();
-            def.OptionsSpot.Copy(input.OptionsSpot, def.OptionsSpot);
+            input.SpotStreamsOptions = new KrakenSocketApiClientOptions();
+            def.SpotStreamsOptions.Copy(input.SpotStreamsOptions, def.SpotStreamsOptions);
+        }
+    }
+
+    public class KrakenSocketApiClientOptions : ApiClientOptions
+    {
+        /// <summary>
+        /// The base address for the authenticated websocket
+        /// </summary>
+        public string BaseAddressAuthenticated { get; set; }
+
+        public KrakenSocketApiClientOptions()
+        {
+        }
+
+        public KrakenSocketApiClientOptions(string baseAddress, string baseAddressAuthenticated) : base(baseAddress)
+        {
+            BaseAddressAuthenticated = baseAddressAuthenticated;
+        }
+
+        public KrakenSocketApiClientOptions(KrakenSocketApiClientOptions baseOn) : base(baseOn)
+        {
+            BaseAddressAuthenticated = baseOn.BaseAddressAuthenticated;
+        }
+
+        public new void Copy<T>(T input, T def) where T : KrakenSocketApiClientOptions
+        {
+            base.Copy(input, def);
+
+            input.BaseAddressAuthenticated = def.BaseAddressAuthenticated;
         }
     }
 

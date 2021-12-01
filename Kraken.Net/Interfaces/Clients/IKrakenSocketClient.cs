@@ -16,6 +16,6 @@ namespace Kraken.Net.Interfaces.Clients.Socket
     /// </summary>
     public interface IKrakenSocketClient: ISocketClient
     {
-        IKrakenSocketClientSpotMarket SpotMarket { get; }
+        IKrakenSocketClientSpotMarket SpotStreams { get; }
     }
 }

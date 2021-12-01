@@ -20,14 +20,14 @@ namespace Kraken.Net.Clients.Rest.Spot
     /// <summary>
     /// Client for the Kraken Rest API
     /// </summary>
-    public class KrakenClient: RestClient, IKrakenClient
+    public class KrakenClient: BaseRestClient, IKrakenClient
     {
         #region fields
         public new KrakenClientOptions ClientOptions { get; }
         #endregion
 
-        #region Subclients
-        public IKrakenClientSpot SpotMarket { get; }
+        #region Api clients
+        public IKrakenClientSpot SpotApi { get; }
         #endregion
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Kraken.Net.Clients.Rest.Spot
             ClientOptions = options;
             requestBodyFormat = RequestBodyFormat.FormData;
 
-            SpotMarket = new KrakenClientSpot(this, options);
+            SpotApi = new KrakenClientSpot(this, options);
         }
         #endregion
 
@@ -81,9 +81,9 @@ namespace Kraken.Net.Clients.Rest.Spot
             request.SetContent(stringData, contentType);
         }
 
-        internal async Task<WebCallResult<T>> Execute<T>(RestSubClient subClient, Uri url, HttpMethod method, CancellationToken ct, Dictionary<string, object>? parameters = null, bool signed = false, int weight = 1)
+        internal async Task<WebCallResult<T>> Execute<T>(RestApiClient apiClient, Uri url, HttpMethod method, CancellationToken ct, Dictionary<string, object>? parameters = null, bool signed = false, int weight = 1)
         {
-            var result = await SendRequestAsync<KrakenResult<T>>(subClient, url, method, ct, parameters, signed, requestWeight: weight).ConfigureAwait(false);
+            var result = await SendRequestAsync<KrakenResult<T>>(apiClient, url, method, ct, parameters, signed, requestWeight: weight).ConfigureAwait(false);
             if (!result)
                 return new WebCallResult<T>(result.ResponseStatusCode, result.ResponseHeaders, default, result.Error);
 
@@ -95,7 +95,7 @@ namespace Kraken.Net.Clients.Rest.Spot
 
         public override void Dispose()
         {
-            SpotMarket.Dispose();
+            SpotApi.Dispose();
             base.Dispose();
         }
     }
