@@ -3,7 +3,6 @@ using CryptoExchange.Net.Converters;
 using CryptoExchange.Net.Objects;
 using Kraken.Net.Converters;
 using Kraken.Net.Enums;
-using Kraken.Net.Interfaces.Clients.Rest.Spot;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,14 +11,15 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Kraken.Net.Objects.Models;
+using Kraken.Net.Interfaces.Clients.SpotApi;
 
-namespace Kraken.Net.Clients.Rest.Spot
+namespace Kraken.Net.Clients.SpotApi
 {
-    public class KrakenClientSpotExchangeData: IKrakenClientSpotExchangeData
+    public class KrakenClientSpotApiExchangeData : IKrakenClientSpotApiExchangeData
     {
-        private readonly KrakenClientSpot _baseClient;
+        private readonly KrakenClientSpotApi _baseClient;
 
-        internal KrakenClientSpotExchangeData(KrakenClientSpot baseClient)
+        internal KrakenClientSpotApiExchangeData(KrakenClientSpotApi baseClient)
         {
             _baseClient = baseClient;
         }
@@ -61,7 +61,7 @@ namespace Kraken.Net.Clients.Rest.Spot
 
         /// <inheritdoc />
         public Task<WebCallResult<Dictionary<string, KrakenRestTick>>> GetTickerAsync(string symbol, CancellationToken ct = default)
-            => GetTickersAsync(new [] { symbol }, ct);
+            => GetTickersAsync(new[] { symbol }, ct);
 
         /// <inheritdoc />
         public async Task<WebCallResult<Dictionary<string, KrakenRestTick>>> GetTickersAsync(IEnumerable<string> symbols, CancellationToken ct = default)

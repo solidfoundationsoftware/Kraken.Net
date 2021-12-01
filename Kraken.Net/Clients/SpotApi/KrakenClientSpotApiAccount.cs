@@ -3,7 +3,6 @@ using CryptoExchange.Net.Converters;
 using CryptoExchange.Net.Objects;
 using Kraken.Net.Converters;
 using Kraken.Net.Enums;
-using Kraken.Net.Interfaces.Clients.Rest.Spot;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,14 +13,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Kraken.Net.Objects.Models;
 using Kraken.Net.Objects.Models.Socket;
+using Kraken.Net.Interfaces.Clients.SpotApi;
 
-namespace Kraken.Net.Clients.Rest.Spot
+namespace Kraken.Net.Clients.SpotApi
 {
-    public class KrakenClientSpotAccount: IKrakenClientSpotAccount
+    public class KrakenClientSpotApiAccount : IKrakenClientSpotApiAccount
     {
-        private readonly KrakenClientSpot _baseClient;
+        private readonly KrakenClientSpotApi _baseClient;
 
-        internal KrakenClientSpotAccount(KrakenClientSpot baseClient)
+        internal KrakenClientSpotApiAccount(KrakenClientSpotApi baseClient)
         {
             _baseClient = baseClient;
         }
@@ -39,7 +39,7 @@ namespace Kraken.Net.Clients.Rest.Spot
         public async Task<WebCallResult<Dictionary<string, KrakenBalanceAvailable>>> GetAvailableBalancesAsync(string? twoFactorPassword = null, CancellationToken ct = default)
         {
             var parameters = new Dictionary<string, object>();
-            parameters.AddOptionalParameter("otp", twoFactorPassword ??  _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
+            parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
             return await _baseClient.Execute<Dictionary<string, KrakenBalanceAvailable>>(_baseClient.GetUri("0/private/BalanceEx"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         }
 
@@ -49,7 +49,7 @@ namespace Kraken.Net.Clients.Rest.Spot
             var parameters = new Dictionary<string, object>();
             parameters.AddOptionalParameter("aclass", "currency");
             parameters.AddOptionalParameter("asset", baseAsset);
-            parameters.AddOptionalParameter("otp", twoFactorPassword ??  _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
+            parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
             return await _baseClient.Execute<KrakenTradeBalance>(_baseClient.GetUri("0/private/TradeBalance"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         }
 
@@ -60,7 +60,7 @@ namespace Kraken.Net.Clients.Rest.Spot
             var parameters = new Dictionary<string, object>();
             parameters.AddOptionalParameter("docalcs", true);
             parameters.AddOptionalParameter("txid", transactionIds?.Any() == true ? string.Join(",", transactionIds) : null);
-            parameters.AddOptionalParameter("otp", twoFactorPassword ??  _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
+            parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
             var result = await _baseClient.Execute<Dictionary<string, KrakenPosition>>(_baseClient.GetUri("0/private/OpenPositions"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
             if (result)
             {
@@ -79,7 +79,7 @@ namespace Kraken.Net.Clients.Rest.Spot
             parameters.AddOptionalParameter("start", DateTimeConverter.ConvertToSeconds(startTime));
             parameters.AddOptionalParameter("end", DateTimeConverter.ConvertToSeconds(endTime));
             parameters.AddOptionalParameter("ofs", resultOffset);
-            parameters.AddOptionalParameter("otp", twoFactorPassword ??  _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
+            parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
             var result = await _baseClient.Execute<KrakenLedgerPage>(_baseClient.GetUri("0/private/Ledgers"), HttpMethod.Post, ct, parameters, true, weight: 2).ConfigureAwait(false);
             if (result)
             {
@@ -94,7 +94,7 @@ namespace Kraken.Net.Clients.Rest.Spot
         {
             var parameters = new Dictionary<string, object>();
             parameters.AddOptionalParameter("id", ledgerIds?.Any() == true ? string.Join(",", ledgerIds) : null);
-            parameters.AddOptionalParameter("otp", twoFactorPassword ??  _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
+            parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
             var result = await _baseClient.Execute<Dictionary<string, KrakenLedgerEntry>>(_baseClient.GetUri("0/private/QueryLedgers"), HttpMethod.Post, ct, parameters, true, weight: 2).ConfigureAwait(false);
             if (result)
             {
@@ -110,7 +110,7 @@ namespace Kraken.Net.Clients.Rest.Spot
             var parameters = new Dictionary<string, object>();
             parameters.AddOptionalParameter("fee-info", true);
             parameters.AddOptionalParameter("pair", symbols?.Any() == true ? string.Join(",", symbols) : null);
-            parameters.AddOptionalParameter("otp", twoFactorPassword ??  _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
+            parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
             return await _baseClient.Execute<KrakenTradeVolume>(_baseClient.GetUri("0/private/TradeVolume"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         }
 
@@ -122,7 +122,7 @@ namespace Kraken.Net.Clients.Rest.Spot
             {
                 {"asset", asset}
             };
-            parameters.AddOptionalParameter("otp", twoFactorPassword ??  _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
+            parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
             return await _baseClient.Execute<IEnumerable<KrakenDepositMethod>>(_baseClient.GetUri("0/private/DepositMethods"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         }
 
@@ -156,7 +156,7 @@ namespace Kraken.Net.Clients.Rest.Spot
                 {"asset", asset},
                 {"method", depositMethod},
             };
-            parameters.AddOptionalParameter("otp", twoFactorPassword ??  _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
+            parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
 
             return await _baseClient.Execute<IEnumerable<KrakenDepositStatus>>(_baseClient.GetUri("0/private/DepositStatus"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         }

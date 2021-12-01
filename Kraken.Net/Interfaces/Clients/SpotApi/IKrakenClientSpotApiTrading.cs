@@ -6,12 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Kraken.Net.Objects.Models;
 
-namespace Kraken.Net.Interfaces.Clients.Rest.Spot
+namespace Kraken.Net.Interfaces.Clients.SpotApi
 {
     /// <summary>
     /// Kraken trading endpoints, placing and mananging orders.
     /// </summary>
-    public interface IKrakenClientSpotTrading
+    public interface IKrakenClientSpotApiTrading
     {
         /// <summary>
         /// Get a list of open orders

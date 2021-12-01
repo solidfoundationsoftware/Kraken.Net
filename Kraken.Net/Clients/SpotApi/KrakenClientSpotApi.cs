@@ -7,20 +7,18 @@ using System.Threading.Tasks;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.ExchangeInterfaces;
-using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
 using Kraken.Net.Enums;
-using Kraken.Net.Interfaces.Clients.Rest.Spot;
+using Kraken.Net.Interfaces.Clients.SpotApi;
 using Kraken.Net.Objects;
-using Kraken.Net.Objects.Internal;
 using Kraken.Net.Objects.Models;
 
-namespace Kraken.Net.Clients.Rest.Spot
+namespace Kraken.Net.Clients.SpotApi
 {
     /// <summary>
     /// Client for the Kraken Rest API
     /// </summary>
-    public class KrakenClientSpot: RestApiClient, IKrakenClientSpot, IExchangeClient
+    public class KrakenClientSpotApi : RestApiClient, IKrakenClientSpotApi, IExchangeClient
     {
         #region fields
         public new KrakenClientOptions ClientOptions { get; }
@@ -28,9 +26,9 @@ namespace Kraken.Net.Clients.Rest.Spot
         #endregion
 
         #region Api clients
-        public IKrakenClientSpotAccount Account { get; }
-        public IKrakenClientSpotExchangeData ExchangeData { get; }
-        public IKrakenClientSpotTrading Trading { get; }
+        public IKrakenClientSpotApiAccount Account { get; }
+        public IKrakenClientSpotApiExchangeData ExchangeData { get; }
+        public IKrakenClientSpotApiTrading Trading { get; }
         #endregion
 
         /// <summary>
@@ -46,15 +44,15 @@ namespace Kraken.Net.Clients.Rest.Spot
         /// <summary>
         /// Create a new instance of KrakenClient using the default options
         /// </summary>
-        public KrakenClientSpot(KrakenClient baseClient, KrakenClientOptions options)
+        public KrakenClientSpotApi(KrakenClient baseClient, KrakenClientOptions options)
             : base(options, options.SpotApiOptions)
         {
             ClientOptions = options;
             _baseClient = baseClient;
 
-            Account = new KrakenClientSpotAccount(this);
-            ExchangeData = new KrakenClientSpotExchangeData(this);
-            Trading = new KrakenClientSpotTrading(this);
+            Account = new KrakenClientSpotApiAccount(this);
+            ExchangeData = new KrakenClientSpotApiExchangeData(this);
+            Trading = new KrakenClientSpotApiTrading(this);
         }
         #endregion
 
@@ -79,7 +77,7 @@ namespace Kraken.Net.Clients.Rest.Spot
         async Task<WebCallResult<IEnumerable<ICommonTicker>>> IExchangeClient.GetTickersAsync()
         {
             var assets = await ExchangeData.GetSymbolsAsync().ConfigureAwait(false);
-            if(!assets)
+            if (!assets)
                 return new WebCallResult<IEnumerable<ICommonTicker>>(assets.ResponseStatusCode, assets.ResponseHeaders, null, assets.Error);
 
             var ticker = await ExchangeData.GetTickersAsync(assets.Data.Select(d => d.Key).ToArray()).ConfigureAwait(false);
@@ -88,7 +86,7 @@ namespace Kraken.Net.Clients.Rest.Spot
 
         async Task<WebCallResult<IEnumerable<ICommonKline>>> IExchangeClient.GetKlinesAsync(string symbol, TimeSpan timespan, DateTime? startTime = null, DateTime? endTime = null, int? limit = null)
         {
-            if(endTime != null)
+            if (endTime != null)
                 return WebCallResult<IEnumerable<ICommonKline>>.CreateErrorResult(new ArgumentError(
                     $"Kraken doesn't support the {nameof(endTime)} parameter for the method {nameof(IExchangeClient.GetKlinesAsync)}"));
 
@@ -101,7 +99,7 @@ namespace Kraken.Net.Clients.Rest.Spot
                 return WebCallResult<IEnumerable<ICommonKline>>.CreateErrorResult(klines.ResponseStatusCode, klines.ResponseHeaders, klines.Error!);
             return klines.As<IEnumerable<ICommonKline>>(klines.Data.Data);
         }
-        
+
         async Task<WebCallResult<ICommonOrderBook>> IExchangeClient.GetOrderBookAsync(string symbol)
         {
             var book = await ExchangeData.GetOrderBookAsync(symbol).ConfigureAwait(false);
@@ -126,7 +124,7 @@ namespace Kraken.Net.Clients.Rest.Spot
         async Task<WebCallResult<ICommonOrder>> IExchangeClient.GetOrderAsync(string orderId, string? symbol)
         {
             var result = await Trading.GetOrderAsync(orderId).ConfigureAwait(false);
-            return result.As<ICommonOrder> (result.Data?.FirstOrDefault().Value);
+            return result.As<ICommonOrder>(result.Data?.FirstOrDefault().Value);
         }
 
         async Task<WebCallResult<IEnumerable<ICommonTrade>>> IExchangeClient.GetTradesAsync(string orderId, string? symbol = null)
@@ -150,20 +148,20 @@ namespace Kraken.Net.Clients.Rest.Spot
         async Task<WebCallResult<ICommonOrderId>> IExchangeClient.CancelOrderAsync(string orderId, string? symbol)
         {
             var result = await Trading.CancelOrderAsync(orderId).ConfigureAwait(false);
-            if(result.Data?.Pending.Any() != true)
+            if (result.Data?.Pending.Any() != true)
                 return WebCallResult<ICommonOrderId>.CreateErrorResult(result.ResponseStatusCode, result.ResponseHeaders, result.Error ?? new ServerError("No orders canceled"));
 
-            return result.As<ICommonOrderId>(result? new KrakenOrder(){ ReferenceId  = result.Data.Pending.First().ToString() } : null);
+            return result.As<ICommonOrderId>(result ? new KrakenOrder() { ReferenceId = result.Data.Pending.First().ToString() } : null);
         }
 
         async Task<WebCallResult<IEnumerable<ICommonBalance>>> IExchangeClient.GetBalancesAsync(string? accountId = null)
         {
             var result = await Account.GetBalancesAsync().ConfigureAwait(false);
-            return result.As<IEnumerable<ICommonBalance>>(result.Data?.Select(d => new KrakenBalance() { Asset = d.Key, Balance = d.Value}));
+            return result.As<IEnumerable<ICommonBalance>>(result.Data?.Select(d => new KrakenBalance() { Asset = d.Key, Balance = d.Value }));
         }
 
         #endregion
-        
+
         internal Uri GetUri(string endpoint)
         {
             return new Uri(BaseAddress.AppendPath(endpoint));

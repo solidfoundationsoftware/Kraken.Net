@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
-using Kraken.Net.Interfaces.Clients.Socket;
+using Kraken.Net.Interfaces.Clients;
 
 namespace Kraken.Net.Objects
 {

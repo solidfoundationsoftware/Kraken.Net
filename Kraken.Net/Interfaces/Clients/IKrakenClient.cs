@@ -1,6 +1,7 @@
 ﻿using CryptoExchange.Net.Interfaces;
+using Kraken.Net.Interfaces.Clients.SpotApi;
 
-namespace Kraken.Net.Interfaces.Clients.Rest.Spot
+namespace Kraken.Net.Interfaces.Clients
 {
     /// <summary>
     /// Client for accessing the Kraken API. 
@@ -10,7 +11,7 @@ namespace Kraken.Net.Interfaces.Clients.Rest.Spot
         /// <summary>
         /// Endpoints related to account settings, info or actions
         /// </summary>
-        IKrakenClientSpot SpotApi { get; }
+        IKrakenClientSpotApi SpotApi { get; }
 
     }
 }

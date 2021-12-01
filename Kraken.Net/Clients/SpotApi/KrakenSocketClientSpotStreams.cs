@@ -6,13 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
-using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
 using Kraken.Net.Converters;
 using Kraken.Net.Enums;
-using Kraken.Net.Interfaces.Clients.Socket;
+using Kraken.Net.Interfaces.Clients.SpotApi;
 using Kraken.Net.Objects;
 using Kraken.Net.Objects.Internal;
 using Kraken.Net.Objects.Models;
@@ -21,12 +20,12 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Kraken.Net.Clients.Socket
+namespace Kraken.Net.Clients.SpotApi
 {
     /// <summary>
     /// Client for the Kraken websocket API
     /// </summary>
-    public class KrakenSocketClientSpotMarket : SocketApiClient, IKrakenSocketClientSpotMarket
+    public class KrakenSocketClientSpotStreams : SocketApiClient, IKrakenSocketClientSpotStreams
     {
         #region fields                
         private readonly string _authBaseAddress;
@@ -43,7 +42,7 @@ namespace Kraken.Net.Clients.Socket
         /// Create a new instance of KrakenSocketClient using provided options
         /// </summary>
         /// <param name="options">The options to use for this client</param>
-        public KrakenSocketClientSpotMarket(Log log, KrakenSocketClient baseClient, KrakenSocketClientOptions options) : 
+        public KrakenSocketClientSpotStreams(Log log, KrakenSocketClient baseClient, KrakenSocketClientOptions options) :
             base(options, options.SpotStreamsOptions)
         {
             _authBaseAddress = options.SpotStreamsOptions.BaseAddressAuthenticated;
@@ -86,7 +85,7 @@ namespace Kraken.Net.Clients.Socket
         public async Task<CallResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(IEnumerable<string> symbols, Action<DataEvent<KrakenStreamTick>> handler, CancellationToken ct = default)
         {
             var symbolArray = symbols.ToArray();
-            for (var i = 0; i< symbolArray.Length; i++)
+            for (var i = 0; i < symbolArray.Length; i++)
             {
                 symbolArray[i].ValidateKrakenWebsocketSymbol();
                 symbolArray[i] = SymbolToServer(symbolArray[i]);
@@ -164,7 +163,7 @@ namespace Kraken.Net.Clients.Socket
                 handler(data.As(evnt.Data, symbol));
             });
 
-            return await _baseClient.SubscribeInternalAsync(this, new KrakenSubscribeRequest("book", _baseClient.NextIdInternal(), subSymbol) { Details = new KrakenDepthSubscriptionDetails(depth)}, null, false, innerHandler, ct).ConfigureAwait(false);
+            return await _baseClient.SubscribeInternalAsync(this, new KrakenSubscribeRequest("book", _baseClient.NextIdInternal(), subSymbol) { Details = new KrakenDepthSubscriptionDetails(depth) }, null, false, innerHandler, ct).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -176,19 +175,19 @@ namespace Kraken.Net.Clients.Socket
                 if (token != null && token.Count() > 2)
                 {
                     var seq = token[2]!["sequence"];
-                    if(seq == null)
+                    if (seq == null)
                         _log.Write(LogLevel.Warning, "Failed to deserialize stream order, no sequence");
 
                     var sequence = seq!.Value<int>();
                     if (token[0]!.Type == JTokenType.Array)
                     {
-                        var dataArray = (JArray) token[0]!;
+                        var dataArray = (JArray)token[0]!;
                         var deserialized = _baseClient.DeserializeInternal<Dictionary<string, KrakenStreamOrder>[]>(dataArray);
                         if (deserialized)
                         {
                             foreach (var entry in deserialized.Data)
                             {
-                                foreach(var dEntry in entry)
+                                foreach (var dEntry in entry)
                                 {
                                     dEntry.Value.Id = dEntry.Key;
                                     dEntry.Value.SequenceNumber = sequence;
@@ -234,7 +233,7 @@ namespace Kraken.Net.Clients.Socket
                         {
                             foreach (var entry in deserialized.Data)
                             {
-                                foreach(var item in entry)
+                                foreach (var item in entry)
                                 {
                                     item.Value.Id = item.Key;
                                     item.Value.SequenceNumber = sequence;
@@ -258,14 +257,14 @@ namespace Kraken.Net.Clients.Socket
 
         /// <inheritdoc />
         public async Task<CallResult<KrakenStreamPlacedOrder>> PlaceOrderAsync(
-            string websocketToken, 
+            string websocketToken,
             string symbol,
             OrderType type,
             OrderSide side,
             decimal quantity,
             uint? clientOrderId = null,
             decimal? price = null,
-            decimal? secondaryPrice = null, 
+            decimal? secondaryPrice = null,
             decimal? leverage = null,
             DateTime? startTime = null,
             DateTime? expireTime = null,

@@ -5,29 +5,28 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CryptoExchange.Net;
-using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.ExchangeInterfaces;
 using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
-using Kraken.Net.Enums;
-using Kraken.Net.Interfaces.Clients.Rest.Spot;
+using Kraken.Net.Clients.SpotApi;
+using Kraken.Net.Interfaces.Clients;
+using Kraken.Net.Interfaces.Clients.SpotApi;
 using Kraken.Net.Objects;
 using Kraken.Net.Objects.Internal;
-using Kraken.Net.Objects.Models;
 
-namespace Kraken.Net.Clients.Rest.Spot
+namespace Kraken.Net.Clients
 {
     /// <summary>
     /// Client for the Kraken Rest API
     /// </summary>
-    public class KrakenClient: BaseRestClient, IKrakenClient
+    public class KrakenClient : BaseRestClient, IKrakenClient
     {
         #region fields
         public new KrakenClientOptions ClientOptions { get; }
         #endregion
 
         #region Api clients
-        public IKrakenClientSpot SpotApi { get; }
+        public IKrakenClientSpotApi SpotApi { get; }
         #endregion
 
         /// <summary>
@@ -56,7 +55,7 @@ namespace Kraken.Net.Clients.Rest.Spot
             ClientOptions = options;
             requestBodyFormat = RequestBodyFormat.FormData;
 
-            SpotApi = new KrakenClientSpot(this, options);
+            SpotApi = new KrakenClientSpotApi(this, options);
         }
         #endregion
 
@@ -69,7 +68,7 @@ namespace Kraken.Net.Clients.Rest.Spot
         {
             KrakenClientOptions.Default = options;
         }
-                
+
         #endregion
 
         /// <inheritdoc />
@@ -90,7 +89,7 @@ namespace Kraken.Net.Clients.Rest.Spot
             if (result.Data.Error.Any())
                 return new WebCallResult<T>(result.ResponseStatusCode, result.ResponseHeaders, default, new ServerError(string.Join(", ", result.Data.Error)));
 
-            return result.As<T>(result.Data.Result);
+            return result.As(result.Data.Result);
         }
 
         public override void Dispose()

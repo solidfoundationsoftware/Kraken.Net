@@ -1,26 +1,25 @@
-﻿using CryptoExchange.Net.Interfaces;
-using System;
+﻿using System;
 
-namespace Kraken.Net.Interfaces.Clients.Rest.Spot
+namespace Kraken.Net.Interfaces.Clients.SpotApi
 {
     /// <summary>
     /// Client for accessing the Kraken API. 
     /// </summary>
-    public interface IKrakenClientSpot: IDisposable
+    public interface IKrakenClientSpotApi : IDisposable
     {
         /// <summary>
         /// Endpoints related to account settings, info or actions
         /// </summary>
-        IKrakenClientSpotAccount Account { get; }
+        IKrakenClientSpotApiAccount Account { get; }
 
         /// <summary>
         /// Endpoints related to retrieving market and system data
         /// </summary>
-        IKrakenClientSpotExchangeData ExchangeData { get; }
+        IKrakenClientSpotApiExchangeData ExchangeData { get; }
 
         /// <summary>
         /// Endpoints related to orders and trades
         /// </summary>
-        IKrakenClientSpotTrading Trading { get; }
+        IKrakenClientSpotApiTrading Trading { get; }
     }
 }

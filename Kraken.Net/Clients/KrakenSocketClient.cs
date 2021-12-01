@@ -1,35 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CryptoExchange.Net;
-using CryptoExchange.Net.Authentication;
-using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
-using Kraken.Net.Converters;
-using Kraken.Net.Enums;
-using Kraken.Net.Interfaces.Clients.Socket;
+using Kraken.Net.Clients.SpotApi;
+using Kraken.Net.Interfaces.Clients;
+using Kraken.Net.Interfaces.Clients.SpotApi;
 using Kraken.Net.Objects;
 using Kraken.Net.Objects.Internal;
-using Kraken.Net.Objects.Models;
-using Kraken.Net.Objects.Models.Socket;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Kraken.Net.Clients.Socket
+namespace Kraken.Net.Clients
 {
     /// <summary>
     /// Client for the Kraken websocket API
     /// </summary>
-    public class KrakenSocketClient: BaseSocketClient, IKrakenSocketClient
+    public class KrakenSocketClient : BaseSocketClient, IKrakenSocketClient
     {
         #region Api clients
 
-        public IKrakenSocketClientSpotMarket SpotStreams { get; }
+        public IKrakenSocketClientSpotStreams SpotStreams { get; }
 
         #endregion
 
@@ -50,7 +42,7 @@ namespace Kraken.Net.Clients.Socket
             AddGenericHandler("HeartBeat", (messageEvent) => { });
             AddGenericHandler("SystemStatus", (messageEvent) => { });
 
-            SpotStreams = new KrakenSocketClientSpotMarket(log, this, options);
+            SpotStreams = new KrakenSocketClientSpotStreams(log, this, options);
         }
         #endregion
 
@@ -105,7 +97,8 @@ namespace Kraken.Net.Clients.Socket
                 return false;
 
             var error = data["errorMessage"]?.ToString();
-            if (!string.IsNullOrEmpty(error)) {
+            if (!string.IsNullOrEmpty(error))
+            {
                 callResult = new CallResult<T>(default, new ServerError(error!));
                 return true;
             }
@@ -126,10 +119,10 @@ namespace Kraken.Net.Clients.Socket
                 return false;
 
             var requestId = message["reqid"]!.Value<int>();
-            var kRequest = (KrakenSubscribeRequest) request;
+            var kRequest = (KrakenSubscribeRequest)request;
             if (requestId != kRequest.RequestId)
                 return false;
-            
+
             var response = message.ToObject<KrakenSubscriptionEvent>();
             if (response == null)
             {
@@ -137,9 +130,9 @@ namespace Kraken.Net.Clients.Socket
                 return true;
             }
 
-            if(response.ChannelId != 0)
+            if (response.ChannelId != 0)
                 kRequest.ChannelId = response.ChannelId;
-            callResult = new CallResult<object>(response, response.Status == "subscribed" ? null: new ServerError(response.ErrorMessage ?? "-"));
+            callResult = new CallResult<object>(response, response.Status == "subscribed" ? null : new ServerError(response.ErrorMessage ?? "-"));
             return true;
         }
 
@@ -150,7 +143,7 @@ namespace Kraken.Net.Clients.Socket
                 return false;
 
             var kRequest = (KrakenSubscribeRequest)request;
-            var arr = (JArray) message;
+            var arr = (JArray)message;
 
             string channel;
             string symbol;
@@ -210,11 +203,11 @@ namespace Kraken.Net.Clients.Socket
         /// <inheritdoc />
         protected override async Task<bool> UnsubscribeAsync(SocketConnection connection, SocketSubscription subscription)
         {
-            var kRequest = ((KrakenSubscribeRequest)subscription.Request!);
+            var kRequest = (KrakenSubscribeRequest)subscription.Request!;
             KrakenUnsubscribeRequest unsubRequest;
             if (!kRequest.ChannelId.HasValue)
             {
-                if(kRequest.Details?.Topic == "ownTrades")
+                if (kRequest.Details?.Topic == "ownTrades")
                 {
                     unsubRequest = new KrakenUnsubscribeRequest(NextId(), new KrakenUnsubscribeSubscription
                     {

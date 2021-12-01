@@ -1,11 +1,11 @@
 ﻿using Kraken.Net.Interfaces;
-using Kraken.Net.Interfaces.Clients.Rest.Spot;
 using Kraken.Net.UnitTests.TestImplementations;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CryptoExchange.Net.Interfaces;
 using Kraken.Net.Objects;
+using Kraken.Net.Interfaces.Clients;
 
 namespace Kraken.Net.UnitTests
 {

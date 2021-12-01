@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CryptoExchange.Net.Converters;
 using CryptoExchange.Net.ExchangeInterfaces;
-using Kraken.Net.Clients.Rest.Spot;
+using Kraken.Net.Clients.SpotApi;
 using Kraken.Net.Converters;
 using Kraken.Net.Enums;
 using Newtonsoft.Json;
@@ -161,7 +161,7 @@ namespace Kraken.Net.Objects.Models
         /// </summary>
         public decimal Price { get; set; }
         /// <summary>
-        /// Secondary price of the order (<see cref="KrakenClientSpot.Trading.PlaceOrderAsync"/> for details)
+        /// Secondary price of the order (<see cref="KrakenClientSpotApi.Trading.PlaceOrderAsync"/> for details)
         /// </summary>
         [JsonProperty("price2")]
         public decimal SecondaryPrice { get; set; }
