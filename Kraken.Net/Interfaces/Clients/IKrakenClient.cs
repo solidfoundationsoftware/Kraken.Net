@@ -9,7 +9,7 @@ namespace Kraken.Net.Interfaces.Clients
     public interface IKrakenClient : IRestClient
     {
         /// <summary>
-        /// Endpoints related to account settings, info or actions
+        /// Spot API endpoints
         /// </summary>
         IKrakenClientSpotApi SpotApi { get; }
 

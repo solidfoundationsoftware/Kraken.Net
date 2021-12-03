@@ -22,9 +22,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Kraken.Net.Clients.SpotApi
 {
-    /// <summary>
-    /// Client for the Kraken websocket API
-    /// </summary>
+    /// <inheritdoc />
     public class KrakenSocketClientSpotStreams : SocketApiClient, IKrakenSocketClientSpotStreams
     {
         #region fields                
@@ -38,11 +36,7 @@ namespace Kraken.Net.Clients.SpotApi
 
         #region ctor
 
-        /// <summary>
-        /// Create a new instance of KrakenSocketClient using provided options
-        /// </summary>
-        /// <param name="options">The options to use for this client</param>
-        public KrakenSocketClientSpotStreams(Log log, KrakenSocketClient baseClient, KrakenSocketClientOptions options) :
+        internal KrakenSocketClientSpotStreams(Log log, KrakenSocketClient baseClient, KrakenSocketClientOptions options) :
             base(options, options.SpotStreamsOptions)
         {
             _authBaseAddress = options.SpotStreamsOptions.BaseAddressAuthenticated;
@@ -58,7 +52,8 @@ namespace Kraken.Net.Clients.SpotApi
         }
         #endregion
 
-        public override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
+        /// <inheritdoc />
+        protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
             => new KrakenAuthenticationProvider(credentials, _options.NonceProvider ?? new KrakenNonceProvider());
 
         #region methods

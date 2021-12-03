@@ -35,12 +35,15 @@ namespace Kraken.Net.Objects
                         .AddEndpointLimit(new [] { "/private/AddOrder", "/private/CancelOrder", "/private/CancelAll", "/private/CancelAllOrdersAfter" }, 60, TimeSpan.FromSeconds(60), null, true),
             }
         };
+
+        /// <summary>
+        /// Spot API options
+        /// </summary>
         public RestApiClientOptions SpotApiOptions
         {
             get => _spotApiOptions;
             set => _spotApiOptions.Copy(_spotApiOptions, value);
         }
-
 
         /// <summary>
         /// Ctor
@@ -89,6 +92,9 @@ namespace Kraken.Net.Objects
         public INonceProvider? NonceProvider { get; set; }
 
         private KrakenSocketApiClientOptions _spotStreamsOptions = new KrakenSocketApiClientOptions("wss://ws.kraken.com", "wss://ws-auth.kraken.com/");
+        /// <summary>
+        /// Spot streams options
+        /// </summary>
         public KrakenSocketApiClientOptions SpotStreamsOptions
         {
             get => _spotStreamsOptions;
@@ -121,6 +127,9 @@ namespace Kraken.Net.Objects
         }
     }
 
+    /// <summary>
+    /// Socket API options
+    /// </summary>
     public class KrakenSocketApiClientOptions : ApiClientOptions
     {
         /// <summary>
@@ -128,20 +137,33 @@ namespace Kraken.Net.Objects
         /// </summary>
         public string BaseAddressAuthenticated { get; set; }
 
+        /// <summary>
+        /// ctor
+        /// </summary>
         public KrakenSocketApiClientOptions()
         {
         }
 
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="baseAddress"></param>
+        /// <param name="baseAddressAuthenticated"></param>
         public KrakenSocketApiClientOptions(string baseAddress, string baseAddressAuthenticated) : base(baseAddress)
         {
             BaseAddressAuthenticated = baseAddressAuthenticated;
         }
 
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="baseOn"></param>
         public KrakenSocketApiClientOptions(KrakenSocketApiClientOptions baseOn) : base(baseOn)
         {
             BaseAddressAuthenticated = baseOn.BaseAddressAuthenticated;
         }
 
+        /// <inheritdoc />
         public new void Copy<T>(T input, T def) where T : KrakenSocketApiClientOptions
         {
             base.Copy(input, def);

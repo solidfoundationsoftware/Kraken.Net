@@ -16,6 +16,7 @@ using Kraken.Net.Interfaces.Clients.SpotApi;
 
 namespace Kraken.Net.Clients.SpotApi
 {
+    /// <inheritdoc />
     public class KrakenClientSpotApiTrading : IKrakenClientSpotApiTrading
     {
         private readonly KrakenClientSpotApi _baseClient;

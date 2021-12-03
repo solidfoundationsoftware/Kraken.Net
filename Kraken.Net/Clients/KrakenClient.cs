@@ -16,27 +16,16 @@ using Kraken.Net.Objects.Internal;
 
 namespace Kraken.Net.Clients
 {
-    /// <summary>
-    /// Client for the Kraken Rest API
-    /// </summary>
+    /// <inheritdoc cref="IKrakenClient" />
     public class KrakenClient : BaseRestClient, IKrakenClient
     {
         #region fields
-        public new KrakenClientOptions ClientOptions { get; }
         #endregion
 
         #region Api clients
+        /// <inheritdoc />
         public IKrakenClientSpotApi SpotApi { get; }
         #endregion
-
-        /// <summary>
-        /// Event triggered when an order is placed via this client
-        /// </summary>
-        public event Action<ICommonOrderId>? OnOrderPlaced;
-        /// <summary>
-        /// Event triggered when an order is canceled via this client
-        /// </summary>
-        public event Action<ICommonOrderId>? OnOrderCanceled;
 
         #region ctor
         /// <summary>
@@ -52,7 +41,6 @@ namespace Kraken.Net.Clients
         /// <param name="options">The options to use for this client</param>
         public KrakenClient(KrakenClientOptions options) : base("Kraken", options)
         {
-            ClientOptions = options;
             requestBodyFormat = RequestBodyFormat.FormData;
 
             SpotApi = new KrakenClientSpotApi(this, options);
@@ -60,10 +48,11 @@ namespace Kraken.Net.Clients
         #endregion
 
         #region methods
+
         /// <summary>
         /// Set the default options to be used when creating new clients
         /// </summary>
-        /// <param name="options"></param>
+        /// <param name="options">Options to use as default</param>
         public static void SetDefaultOptions(KrakenClientOptions options)
         {
             KrakenClientOptions.Default = options;
@@ -92,6 +81,7 @@ namespace Kraken.Net.Clients
             return result.As(result.Data.Result);
         }
 
+        /// <inheritdoc />
         public override void Dispose()
         {
             SpotApi.Dispose();

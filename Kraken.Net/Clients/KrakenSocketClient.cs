@@ -14,13 +14,12 @@ using Newtonsoft.Json.Linq;
 
 namespace Kraken.Net.Clients
 {
-    /// <summary>
-    /// Client for the Kraken websocket API
-    /// </summary>
+    /// <inheritdoc cref="IKrakenSocketClient" />
     public class KrakenSocketClient : BaseSocketClient, IKrakenSocketClient
     {
         #region Api clients
 
+        /// <inheritdoc />
         public IKrakenSocketClientSpotStreams SpotStreams { get; }
 
         #endregion
@@ -49,9 +48,9 @@ namespace Kraken.Net.Clients
         #region methods
 
         /// <summary>
-        /// Set the default options to be used when creating new socket clients
+        /// Set the default options to be used when creating new clients
         /// </summary>
-        /// <param name="options">The options to use for new clients</param>
+        /// <param name="options">Options to use as default</param>
         public static void SetDefaultOptions(KrakenSocketClientOptions options)
         {
             KrakenSocketClientOptions.Default = options;
@@ -137,7 +136,7 @@ namespace Kraken.Net.Clients
         }
 
         /// <inheritdoc />
-        protected override bool MessageMatchesHandler(JToken message, object request)
+        protected override bool MessageMatchesHandler(SocketConnection socketConnection, JToken message, object request)
         {
             if (message.Type != JTokenType.Array)
                 return false;
@@ -180,7 +179,7 @@ namespace Kraken.Net.Clients
         }
 
         /// <inheritdoc />
-        protected override bool MessageMatchesHandler(JToken message, string identifier)
+        protected override bool MessageMatchesHandler(SocketConnection socketConnection, JToken message, string identifier)
         {
             if (message.Type != JTokenType.Object)
                 return false;
@@ -248,6 +247,7 @@ namespace Kraken.Net.Clients
             return result;
         }
 
+        /// <inheritdoc />
         public override void Dispose()
         {
             SpotStreams.Dispose();

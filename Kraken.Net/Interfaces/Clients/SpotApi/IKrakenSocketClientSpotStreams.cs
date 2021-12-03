@@ -11,7 +11,7 @@ using Kraken.Net.Objects.Models.Socket;
 namespace Kraken.Net.Interfaces.Clients.SpotApi
 {
     /// <summary>
-    /// Interface for the Kraken socket client
+    /// Spot streams
     /// </summary>
     public interface IKrakenSocketClientSpotStreams : IDisposable
     {

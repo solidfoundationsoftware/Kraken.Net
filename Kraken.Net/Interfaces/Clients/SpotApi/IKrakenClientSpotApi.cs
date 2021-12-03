@@ -3,7 +3,7 @@
 namespace Kraken.Net.Interfaces.Clients.SpotApi
 {
     /// <summary>
-    /// Client for accessing the Kraken API. 
+    /// Spot API endpoints
     /// </summary>
     public interface IKrakenClientSpotApi : IDisposable
     {

@@ -15,19 +15,21 @@ using Kraken.Net.Objects.Models;
 
 namespace Kraken.Net.Clients.SpotApi
 {
-    /// <summary>
-    /// Client for the Kraken Rest API
-    /// </summary>
+    /// <inheritdoc cref="IKrakenClientSpotApi" />
     public class KrakenClientSpotApi : RestApiClient, IKrakenClientSpotApi, IExchangeClient
     {
         #region fields
-        public new KrakenClientOptions ClientOptions { get; }
+        internal KrakenClientOptions ClientOptions { get; }
         private KrakenClient _baseClient;
         #endregion
 
         #region Api clients
+
+        /// <inheritdoc />
         public IKrakenClientSpotApiAccount Account { get; }
+        /// <inheritdoc />
         public IKrakenClientSpotApiExchangeData ExchangeData { get; }
+        /// <inheritdoc />
         public IKrakenClientSpotApiTrading Trading { get; }
         #endregion
 
@@ -41,10 +43,7 @@ namespace Kraken.Net.Clients.SpotApi
         public event Action<ICommonOrderId>? OnOrderCanceled;
 
         #region ctor
-        /// <summary>
-        /// Create a new instance of KrakenClient using the default options
-        /// </summary>
-        public KrakenClientSpotApi(KrakenClient baseClient, KrakenClientOptions options)
+        internal KrakenClientSpotApi(KrakenClient baseClient, KrakenClientOptions options)
             : base(options, options.SpotApiOptions)
         {
             ClientOptions = options;
@@ -56,7 +55,8 @@ namespace Kraken.Net.Clients.SpotApi
         }
         #endregion
 
-        public override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
+        /// <inheritdoc />
+        protected override AuthenticationProvider CreateAuthenticationProvider(ApiCredentials credentials)
             => new KrakenAuthenticationProvider(credentials, ClientOptions.NonceProvider ?? new KrakenNonceProvider());
 
         #region common interface
