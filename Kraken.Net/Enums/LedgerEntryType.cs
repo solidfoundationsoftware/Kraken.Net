@@ -32,6 +32,18 @@
         /// <summary>
         /// Rollover
         /// </summary>
-        Rollover
+        Rollover,
+        /// <summary>
+        /// Spend
+        /// </summary>
+        Spend,
+        /// <summary>
+        /// Receive
+        /// </summary>
+        Receive,
+        /// <summary>
+        /// Settled
+        /// </summary>
+        Settled
     }
 }
