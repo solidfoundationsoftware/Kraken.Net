@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.ExchangeInterfaces;
+using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
 using Kraken.Net.Enums;
 using Kraken.Net.Interfaces.Clients.SpotApi;
@@ -21,6 +22,9 @@ namespace Kraken.Net.Clients.SpotApi
         #region fields
         internal KrakenClientOptions ClientOptions { get; }
         private KrakenClient _baseClient;
+        private Log _log;
+
+        internal static TimeSyncState TimeSyncState = new TimeSyncState();
         #endregion
 
         #region Api clients
@@ -43,11 +47,12 @@ namespace Kraken.Net.Clients.SpotApi
         public event Action<ICommonOrderId>? OnOrderCanceled;
 
         #region ctor
-        internal KrakenClientSpotApi(KrakenClient baseClient, KrakenClientOptions options)
+        internal KrakenClientSpotApi(Log log, KrakenClient baseClient, KrakenClientOptions options)
             : base(options, options.SpotApiOptions)
         {
             ClientOptions = options;
             _baseClient = baseClient;
+            _log = log;
 
             Account = new KrakenClientSpotApiAccount(this);
             ExchangeData = new KrakenClientSpotApiExchangeData(this);
@@ -219,5 +224,17 @@ namespace Kraken.Net.Clients.SpotApi
 
             throw new ArgumentException("Unsupported order type for Kraken order: " + type);
         }
+
+        /// <inheritdoc />
+        protected override Task<WebCallResult<DateTime>> GetServerTimestampAsync()
+            => ExchangeData.GetServerTimeAsync();
+
+        /// <inheritdoc />
+        protected override TimeSyncInfo GetTimeSyncInfo()
+            => new TimeSyncInfo(_log, ClientOptions.SpotApiOptions.AutoTimestamp, TimeSyncState);
+
+        /// <inheritdoc />
+        public override TimeSpan GetTimeOffset()
+            => TimeSyncState.TimeOffset;
     }
 }

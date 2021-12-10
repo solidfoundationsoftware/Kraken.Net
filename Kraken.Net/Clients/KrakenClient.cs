@@ -43,7 +43,7 @@ namespace Kraken.Net.Clients
         {
             requestBodyFormat = RequestBodyFormat.FormData;
 
-            SpotApi = new KrakenClientSpotApi(this, options);
+            SpotApi = new KrakenClientSpotApi(log, this, options);
         }
         #endregion
 
@@ -59,15 +59,6 @@ namespace Kraken.Net.Clients
         }
 
         #endregion
-
-        /// <inheritdoc />
-        protected override void WriteParamBody(IRequest request, Dictionary<string, object> parameters, string contentType)
-        {
-            if (parameters.TryGetValue("nonce", out var nonce))
-                log.Write(Microsoft.Extensions.Logging.LogLevel.Trace, $"[{request.RequestId}] Nonce: " + nonce);
-            var stringData = string.Join("&", parameters.OrderBy(p => p.Key != "nonce").Select(p => $"{p.Key}={p.Value}"));
-            request.SetContent(stringData, contentType);
-        }
 
         internal async Task<WebCallResult<T>> Execute<T>(RestApiClient apiClient, Uri url, HttpMethod method, CancellationToken ct, Dictionary<string, object>? parameters = null, bool signed = false, int weight = 1)
         {

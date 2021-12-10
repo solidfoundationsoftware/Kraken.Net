@@ -26,7 +26,7 @@ namespace Kraken.Net.UnitTests.TestImplementations
     public class TestHelpers
     {
         [ExcludeFromCodeCoverage]
-        public static bool AreEqual(object? self, object? to, params string[] ignore)
+        public static bool AreEqual(object self, object to, params string[] ignore)
         {
             if (self == null && to == null)
                 return true;
@@ -108,7 +108,7 @@ namespace Kraken.Net.UnitTests.TestImplementations
             return true;
         }
 
-        public static KrakenSocketClient CreateSocketClient(IWebsocket socket, KrakenSocketClientOptions? options = null)
+        public static KrakenSocketClient CreateSocketClient(IWebsocket socket, KrakenSocketClientOptions options = null)
         {
             KrakenSocketClient client;
             client = options != null ? new KrakenSocketClient(options) : new KrakenSocketClient(new KrakenSocketClientOptions() { LogLevel = LogLevel.Debug, ApiCredentials = new ApiCredentials("Test", "Test") });
@@ -117,7 +117,7 @@ namespace Kraken.Net.UnitTests.TestImplementations
             return client;
         }
 
-        public static KrakenSocketClient CreateAuthenticatedSocketClient(IWebsocket socket, KrakenSocketClientOptions? options = null)
+        public static KrakenSocketClient CreateAuthenticatedSocketClient(IWebsocket socket, KrakenSocketClientOptions options = null)
         {
             KrakenSocketClient client;
             client = options != null ? new KrakenSocketClient(options) : new KrakenSocketClient(new KrakenSocketClientOptions(){ LogLevel = LogLevel.Debug, ApiCredentials = new ApiCredentials("Test", "Test")});
@@ -126,7 +126,7 @@ namespace Kraken.Net.UnitTests.TestImplementations
             return client;
         }
 
-        public static IKrakenClient CreateClient(KrakenClientOptions? options = null)
+        public static IKrakenClient CreateClient(KrakenClientOptions options = null)
         {
             IKrakenClient client;
             client = options != null ? new KrakenClient(options) : new KrakenClient(new KrakenClientOptions(){LogLevel = LogLevel.Debug});
@@ -142,14 +142,14 @@ namespace Kraken.Net.UnitTests.TestImplementations
         }
 
 
-        public static IKrakenClient CreateResponseClient(string response, KrakenClientOptions? options = null)
+        public static IKrakenClient CreateResponseClient(string response, KrakenClientOptions options = null)
         {
             var client = (KrakenClient)CreateClient(options);
             SetResponse(client, response);
             return client;
         }
 
-        public static IKrakenClient CreateResponseClient<T>(T response, KrakenClientOptions? options = null)
+        public static IKrakenClient CreateResponseClient<T>(T response, KrakenClientOptions options = null)
         {
             var client = (KrakenClient)CreateClient(options);
             SetResponse(client, JsonConvert.SerializeObject(response));
@@ -173,11 +173,11 @@ namespace Kraken.Net.UnitTests.TestImplementations
             request.Setup(c => c.GetResponseAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(response.Object));
 
             var factory = Mock.Get(client.RequestFactory);
-            factory.Setup(c => c.Create(It.IsAny<HttpMethod>(), It.IsAny<string>(), It.IsAny<int>()))
+            factory.Setup(c => c.Create(It.IsAny<HttpMethod>(), It.IsAny<Uri>(), It.IsAny<int>()))
                 .Returns(request.Object);
         }
         
-        public static object? GetTestValue(Type type, int i)
+        public static object GetTestValue(Type type, int i)
         {
             if (type == typeof(bool))
                 return true;
