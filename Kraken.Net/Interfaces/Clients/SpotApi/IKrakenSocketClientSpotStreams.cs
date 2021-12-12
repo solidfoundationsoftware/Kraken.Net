@@ -17,6 +17,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
     {
         /// <summary>
         /// Subscribe to system status updates
+        /// <para><a href="https://docs.kraken.com/websockets/#message-systemStatus" /></para>
         /// </summary>
         /// <param name="handler">Data handler</param>
         /// <param name="ct">Cancellation token for closing this subscription</param>
@@ -25,6 +26,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to ticker updates
+        /// <para><a href="https://docs.kraken.com/websockets/#message-ticker" /></para>
         /// </summary>
         /// <param name="symbol">Symbol to subscribe to</param>
         /// <param name="handler">Data handler</param>
@@ -34,6 +36,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to ticker updates
+        /// <para><a href="https://docs.kraken.com/websockets/#message-ticker" /></para>
         /// </summary>
         /// <param name="symbols">Symbols to subscribe to</param>
         /// <param name="handler">Data handler</param>
@@ -43,6 +46,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to kline updates
+        /// <para><a href="https://docs.kraken.com/websockets/#message-ohlc" /></para>
         /// </summary>
         /// <param name="symbol">Symbol to subscribe to</param>
         /// <param name="interval">Kline interval</param>
@@ -53,6 +57,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to trade updates
+        /// <para><a href="https://docs.kraken.com/websockets/#message-trade" /></para>
         /// </summary>
         /// <param name="symbol">Symbol to subscribe to</param>
         /// <param name="handler">Data handler</param>
@@ -62,6 +67,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to spread updates
+        /// <para><a href="https://docs.kraken.com/websockets/#message-spread" /></para>
         /// </summary>
         /// <param name="symbol">Symbol to subscribe to</param>
         /// <param name="handler">Data handler</param>
@@ -71,6 +77,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to depth updates
+        /// <para><a href="https://docs.kraken.com/websockets/#message-book" /></para>
         /// </summary>
         /// <param name="symbol">Symbol to subscribe to</param>
         /// <param name="depth">Depth of the initial order book snapshot. 10, 25, 100, 500 or 1000</param>
@@ -81,6 +88,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to open order updates
+        /// <para><a href="https://docs.kraken.com/websockets/#message-openOrders" /></para>
         /// </summary>
         /// <param name="socketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
         /// <param name="handler">Data handler</param>
@@ -91,6 +99,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to own trade updates
+        /// <para><a href="https://docs.kraken.com/websockets/#message-ownTrades" /></para>
         /// </summary>
         /// <param name="socketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
         /// <param name="handler">Data handler</param>
@@ -101,6 +110,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Subscribe to own trade updates
+        /// <para><a href="https://docs.kraken.com/websockets/#message-ownTrades" /></para>
         /// </summary>
         /// <param name="socketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
         /// <param name="snapshot">Whether or not to receive a snapshot of the data upon subscribing</param>
@@ -112,6 +122,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Place a new order
+        /// <para><a href="https://docs.kraken.com/websockets/#message-addOrder" /></para>
         /// </summary>
         /// <param name="websocketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
         /// <param name="symbol">The symbol the order is on</param>
@@ -163,6 +174,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Cancel an order
+        /// <para><a href="https://docs.kraken.com/websockets/#message-cancelOrder" /></para>
         /// </summary>
         /// <param name="websocketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
         /// <param name="orderId">Id of the order to cancel</param>
@@ -171,6 +183,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Cancel multiple orders
+        /// <para><a href="https://docs.kraken.com/websockets/#message-cancelOrder" /></para>
         /// </summary>
         /// <param name="websocketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
         /// <param name="orderIds">Id of the orders to cancel</param>
@@ -179,6 +192,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Cancel all open orders
+        /// <para><a href="https://docs.kraken.com/websockets/#message-cancelAll" /></para>
         /// </summary>
         /// <param name="websocketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>
         /// <returns></returns>
@@ -186,6 +200,7 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
 
         /// <summary>
         /// Cancel all open orders after the timeout
+        /// <para><a href="https://docs.kraken.com/websockets/#message-cancelAllOrdersAfter" /></para>
         /// </summary>
         /// <param name="timeout"></param>
         /// <param name="websocketToken">The socket token as retrieved by the GetWebsocketTokenAsync method in the KrakenClient</param>

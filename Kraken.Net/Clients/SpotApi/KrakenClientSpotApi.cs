@@ -21,8 +21,8 @@ namespace Kraken.Net.Clients.SpotApi
     {
         #region fields
         internal KrakenClientOptions ClientOptions { get; }
-        private KrakenClient _baseClient;
-        private Log _log;
+        private readonly KrakenClient _baseClient;
+        private readonly Log _log;
 
         internal static TimeSyncState TimeSyncState = new TimeSyncState();
         #endregion
