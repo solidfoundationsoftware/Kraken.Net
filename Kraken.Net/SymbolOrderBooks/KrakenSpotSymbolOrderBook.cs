@@ -28,9 +28,8 @@ namespace Kraken.Net.SymbolOrderBooks
         /// Create a new order book instance
         /// </summary>
         /// <param name="symbol">The symbol the order book is for</param>
-        /// <param name="limit">The initial limit of entries in the order book</param>
         /// <param name="options">Options for the order book</param>
-        public KrakenSpotSymbolOrderBook(string symbol, int limit, KrakenOrderBookOptions? options = null) : base("Kraken", symbol, options ?? new KrakenOrderBookOptions())
+        public KrakenSpotSymbolOrderBook(string symbol, KrakenOrderBookOptions? options = null) : base("Kraken", symbol, options ?? new KrakenOrderBookOptions())
         {
             sequencesAreConsecutive = false;
             strictLevels = true;
@@ -41,7 +40,7 @@ namespace Kraken.Net.SymbolOrderBooks
             });
             _socketOwner = options?.SocketClient == null;
 
-            Levels = limit;
+            Levels = options?.Limit ?? 10;
         }
 
         /// <inheritdoc />

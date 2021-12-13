@@ -183,12 +183,9 @@ namespace Kraken.Net.Objects
         public IKrakenSocketClient? SocketClient { get; }
 
         /// <summary>
+        /// The limit of entries in the order book
         /// </summary>
-        /// <param name="client">The client to use for the socket connection. When using the same client for multiple order books the connection can be shared.</param>
-        public KrakenOrderBookOptions(IKrakenSocketClient? client = null)
-        {
-            SocketClient = client;
-        }
+        public int? Limit { get; }
     }
 }
 
