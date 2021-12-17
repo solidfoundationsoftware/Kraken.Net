@@ -41,7 +41,7 @@ namespace Kraken.Net.Clients
             AddGenericHandler("HeartBeat", (messageEvent) => { });
             AddGenericHandler("SystemStatus", (messageEvent) => { });
 
-            SpotStreams = new KrakenSocketClientSpotStreams(log, this, options);
+            SpotStreams = AddApiClient(new KrakenSocketClientSpotStreams(log, this, options));
         }
         #endregion
 
@@ -245,13 +245,6 @@ namespace Kraken.Net.Clients
                 return true;
             }).ConfigureAwait(false);
             return result;
-        }
-
-        /// <inheritdoc />
-        public override void Dispose()
-        {
-            SpotStreams.Dispose();
-            base.Dispose();
         }
     }
 }

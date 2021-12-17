@@ -43,7 +43,7 @@ namespace Kraken.Net.Clients
         {
             requestBodyFormat = RequestBodyFormat.FormData;
 
-            SpotApi = new KrakenClientSpotApi(log, this, options);
+            SpotApi = AddApiClient(new KrakenClientSpotApi(log, this, options));
         }
         #endregion
 
@@ -70,13 +70,6 @@ namespace Kraken.Net.Clients
                 return new WebCallResult<T>(result.ResponseStatusCode, result.ResponseHeaders, default, new ServerError(string.Join(", ", result.Data.Error)));
 
             return result.As(result.Data.Result);
-        }
-
-        /// <inheritdoc />
-        public override void Dispose()
-        {
-            SpotApi.Dispose();
-            base.Dispose();
         }
     }
 }
