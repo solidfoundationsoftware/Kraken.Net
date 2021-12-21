@@ -128,13 +128,13 @@ namespace Kraken.Net.Interfaces.Clients.SpotApi
             OrderSide side,
             OrderType type,
             decimal quantity,
-            uint? clientOrderId = null,
             decimal? price = null,
             decimal? secondaryPrice = null,
             decimal? leverage = null,
             DateTime? startTime = null,
             DateTime? expireTime = null,
             bool? validateOnly = null,
+            uint? clientOrderId = null,
             string? twoFactorPassword = null,
             CancellationToken ct = default);
 
