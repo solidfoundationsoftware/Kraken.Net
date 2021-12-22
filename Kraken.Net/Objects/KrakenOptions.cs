@@ -26,7 +26,7 @@ namespace Kraken.Net.Objects
         /// </summary>
         public INonceProvider? NonceProvider { get; set; }
 
-        private RestApiClientOptions _spotApiOptions = new RestApiClientOptions("https://api.kraken.com")
+        private readonly RestApiClientOptions _spotApiOptions = new RestApiClientOptions("https://api.kraken.com")
         {
             RateLimiters = new List<IRateLimiter>
             {
@@ -91,7 +91,7 @@ namespace Kraken.Net.Objects
         /// </summary>
         public INonceProvider? NonceProvider { get; set; }
 
-        private KrakenSocketApiClientOptions _spotStreamsOptions = new KrakenSocketApiClientOptions("wss://ws.kraken.com", "wss://ws-auth.kraken.com/");
+        private readonly KrakenSocketApiClientOptions _spotStreamsOptions = new KrakenSocketApiClientOptions("wss://ws.kraken.com", "wss://ws-auth.kraken.com/");
         /// <summary>
         /// Spot streams options
         /// </summary>
@@ -140,7 +140,9 @@ namespace Kraken.Net.Objects
         /// <summary>
         /// ctor
         /// </summary>
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public KrakenSocketApiClientOptions()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
         }
 
