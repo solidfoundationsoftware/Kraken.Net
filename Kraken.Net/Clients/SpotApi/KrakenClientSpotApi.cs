@@ -35,6 +35,9 @@ namespace Kraken.Net.Clients.SpotApi
         public IKrakenClientSpotApiExchangeData ExchangeData { get; }
         /// <inheritdoc />
         public IKrakenClientSpotApiTrading Trading { get; }
+
+        /// <inheritdoc />
+        public string ExchangeName => "Kraken";
         #endregion
 
         /// <summary>
@@ -236,5 +239,8 @@ namespace Kraken.Net.Clients.SpotApi
         /// <inheritdoc />
         public override TimeSpan GetTimeOffset()
             => TimeSyncState.TimeOffset;
+
+        /// <inheritdoc />
+        public IExchangeClient AsExchangeClient() => this;
     }
 }
