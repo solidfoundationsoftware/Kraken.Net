@@ -1,6 +1,5 @@
 ﻿using System;
 using CryptoExchange.Net.Converters;
-using CryptoExchange.Net.ExchangeInterfaces;
 using Kraken.Net.Converters;
 using Kraken.Net.Enums;
 using Newtonsoft.Json;
@@ -11,7 +10,7 @@ namespace Kraken.Net.Objects.Models
     /// Trade info
     /// </summary>
     [JsonConverter(typeof(ArrayConverter))]
-    public class KrakenTrade: ICommonRecentTrade
+    public class KrakenTrade
     {
         /// <summary>
         /// Price of the trade
@@ -44,9 +43,5 @@ namespace Kraken.Net.Objects.Models
         /// </summary>
         [ArrayProperty(5)]
         public string Misc { get; set; } = string.Empty;
-
-        decimal ICommonRecentTrade.CommonPrice => Price;
-        decimal ICommonRecentTrade.CommonQuantity => Quantity;
-        DateTime ICommonRecentTrade.CommonTradeTime => Timestamp;
     }
 }

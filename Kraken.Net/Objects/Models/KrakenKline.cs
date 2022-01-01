@@ -1,6 +1,5 @@
 ﻿using System;
 using CryptoExchange.Net.Converters;
-using CryptoExchange.Net.ExchangeInterfaces;
 using Newtonsoft.Json;
 
 namespace Kraken.Net.Objects.Models
@@ -9,7 +8,7 @@ namespace Kraken.Net.Objects.Models
     /// Kline data
     /// </summary>
     [JsonConverter(typeof(ArrayConverter))]
-    public class KrakenKline: ICommonKline
+    public class KrakenKline
     {
         /// <summary>
         /// Timestamp of the kline
@@ -55,13 +54,6 @@ namespace Kraken.Net.Objects.Models
         /// </summary>
         [ArrayProperty(7)]
         public int TradeCount { get; set; }
-
-        decimal ICommonKline.CommonHighPrice => HighPrice;
-        decimal ICommonKline.CommonLowPrice => LowPrice;
-        decimal ICommonKline.CommonOpenPrice => OpenPrice;
-        decimal ICommonKline.CommonClosePrice => ClosePrice;
-        decimal ICommonKline.CommonVolume => Volume;
-        DateTime ICommonKline.CommonOpenTime => OpenTime;
     }
 
     /// <summary>

@@ -1,5 +1,4 @@
 ﻿using CryptoExchange.Net.Converters;
-using CryptoExchange.Net.ExchangeInterfaces;
 using Newtonsoft.Json;
 
 namespace Kraken.Net.Objects.Models
@@ -54,7 +53,7 @@ namespace Kraken.Net.Objects.Models
     /// <summary>
     /// Tick info
     /// </summary>
-    public class KrakenRestTick: KrakenTick, ICommonTicker
+    public class KrakenRestTick: KrakenTick
     {
         /// <summary>
         /// Symbol
@@ -65,11 +64,6 @@ namespace Kraken.Net.Objects.Models
         /// </summary>
         [JsonProperty("o")]
         public decimal OpenPrice { get; set; }
-
-        string ICommonTicker.CommonSymbol => Symbol;
-        decimal ICommonTicker.CommonHighPrice => High.Value24H;
-        decimal ICommonTicker.CommonLowPrice => Low.Value24H;
-        decimal ICommonTicker.CommonVolume => Volume.Value24H;
     }
 
     /// <summary>

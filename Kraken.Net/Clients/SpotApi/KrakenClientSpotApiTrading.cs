@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Kraken.Net.Objects.Models;
 using Kraken.Net.Interfaces.Clients.SpotApi;
+using CryptoExchange.Net.ComonObjects;
 
 namespace Kraken.Net.Clients.SpotApi
 {
@@ -127,8 +128,8 @@ namespace Kraken.Net.Clients.SpotApi
         /// <inheritdoc />
         public async Task<WebCallResult<KrakenPlacedOrder>> PlaceOrderAsync(
             string symbol,
-            OrderSide side,
-            OrderType type,
+            Enums.OrderSide side,
+            Enums.OrderType type,
             decimal quantity,
             decimal? price = null,
             decimal? secondaryPrice = null,
@@ -160,7 +161,7 @@ namespace Kraken.Net.Clients.SpotApi
                 parameters.AddOptionalParameter("validate", true);
             var result = await _baseClient.Execute<KrakenPlacedOrder>(_baseClient.GetUri("0/private/AddOrder"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
             if (result)
-                _baseClient.InvokeOrderPlaced(result.Data);
+                _baseClient.InvokeOrderPlaced(new OrderId { SourceObject = result.Data, Id = result.Data.OrderIds.First() });
             return result;
         }
 
@@ -175,7 +176,7 @@ namespace Kraken.Net.Clients.SpotApi
             parameters.AddOptionalParameter("otp", twoFactorPassword ?? _baseClient.ClientOptions.StaticTwoFactorAuthenticationPassword);
             var result = await _baseClient.Execute<KrakenCancelResult>(_baseClient.GetUri("0/private/CancelOrder"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
             if (result)
-                _baseClient.InvokeOrderCanceled(new KrakenOrder { Id = orderId });
+                _baseClient.InvokeOrderCanceled(new OrderId { SourceObject = result.Data, Id = orderId });
             return result;
         }
     }

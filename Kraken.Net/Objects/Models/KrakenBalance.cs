@@ -1,11 +1,9 @@
-﻿using CryptoExchange.Net.ExchangeInterfaces;
-
-namespace Kraken.Net.Objects.Models
+﻿namespace Kraken.Net.Objects.Models
 {
     /// <summary>
     /// Balance info
     /// </summary>
-    public class KrakenBalance: ICommonBalance
+    public class KrakenBalance
     {
         /// <summary>
         /// Asset
@@ -15,9 +13,5 @@ namespace Kraken.Net.Objects.Models
         /// Balance
         /// </summary>
         public decimal Balance { get; set; }
-
-        string ICommonBalance.CommonAsset => Asset;
-        decimal ICommonBalance.CommonAvailable => Balance;
-        decimal ICommonBalance.CommonTotal => Balance;
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CryptoExchange.Net.Converters;
-using CryptoExchange.Net.ExchangeInterfaces;
 using Kraken.Net.Clients.SpotApi;
 using Kraken.Net.Converters;
 using Kraken.Net.Enums;
@@ -12,7 +11,7 @@ namespace Kraken.Net.Objects.Models
     /// <summary>
     /// Order info
     /// </summary>
-    public class KrakenOrder: ICommonOrder
+    public class KrakenOrder
     {
         /// <summary>
         /// The id of the order
@@ -110,30 +109,6 @@ namespace Kraken.Net.Objects.Models
         /// </summary>
         [JsonProperty("trades")]
         public IEnumerable<string> TradeIds { get; set; } = Array.Empty<string>();
-
-        string ICommonOrderId.CommonId => ReferenceId;
-        string ICommonOrder.CommonSymbol => OrderDetails.Symbol;
-        decimal ICommonOrder.CommonPrice => OrderDetails.Price;
-        decimal ICommonOrder.CommonQuantity => Quantity;
-        IExchangeClient.OrderStatus ICommonOrder.CommonStatus => Status == OrderStatus.Canceled || Status == OrderStatus.Expired ? IExchangeClient.OrderStatus.Canceled:
-            Status == OrderStatus.Pending || Status == OrderStatus.Open ? IExchangeClient.OrderStatus.Active:
-            IExchangeClient.OrderStatus.Filled;
-        bool ICommonOrder.IsActive => Status == OrderStatus.Open;
-        DateTime ICommonOrder.CommonOrderTime => StartTime;
-
-        IExchangeClient.OrderSide ICommonOrder.CommonSide => OrderDetails.Side == OrderSide.Sell
-            ? IExchangeClient.OrderSide.Sell
-            : IExchangeClient.OrderSide.Buy;
-
-        IExchangeClient.OrderType ICommonOrder.CommonType
-        {
-            get
-            {
-                if (OrderDetails.Type == OrderType.Limit) return IExchangeClient.OrderType.Limit;
-                if (OrderDetails.Type == OrderType.Market) return IExchangeClient.OrderType.Market;
-                return IExchangeClient.OrderType.Other;
-            }
-        }
     }
 
     /// <summary>

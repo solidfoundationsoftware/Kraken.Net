@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Kraken.Net.Clients;
+using Kraken.Net.Interfaces.Clients;
+using Kraken.Net.Objects;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Text.RegularExpressions;
 
 namespace Kraken.Net
@@ -8,6 +12,28 @@ namespace Kraken.Net
     /// </summary>
     public static class KrakenHelpers
     {
+        /// <summary>
+        /// Add the IKrakenClient and IKrakenSocketClient to the sevice collection so they can be injected
+        /// </summary>
+        /// <param name="services">The service collection</param>
+        /// <param name="defaultOptionsCallback">Set default options for the client</param>
+        /// <returns></returns>
+        public static IServiceCollection AddKraken(this IServiceCollection services, Action<KrakenClientOptions, KrakenSocketClientOptions>? defaultOptionsCallback = null)
+        {
+            if (defaultOptionsCallback != null)
+            {
+                var options = new KrakenClientOptions();
+                var socketOptions = new KrakenSocketClientOptions();
+                defaultOptionsCallback?.Invoke(options, socketOptions);
+
+                KrakenClient.SetDefaultOptions(options);
+                KrakenSocketClient.SetDefaultOptions(socketOptions);
+            }
+
+            return services.AddTransient<IKrakenClient, KrakenClient>()
+                           .AddScoped<IKrakenSocketClient, KrakenSocketClient>();
+        }
+
         /// <summary>
         /// Validate the string is a valid Kraken symbol.
         /// </summary>

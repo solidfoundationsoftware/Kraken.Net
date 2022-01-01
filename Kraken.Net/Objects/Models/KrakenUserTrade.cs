@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CryptoExchange.Net.Converters;
-using CryptoExchange.Net.ExchangeInterfaces;
 using Kraken.Net.Converters;
 using Kraken.Net.Enums;
 using Newtonsoft.Json;
@@ -11,7 +10,7 @@ namespace Kraken.Net.Objects.Models
     /// <summary>
     /// User trade info
     /// </summary>
-    public class KrakenUserTrade: ICommonTrade
+    public class KrakenUserTrade
     {
         /// <summary>
         /// Order id
@@ -118,13 +117,6 @@ namespace Kraken.Net.Objects.Models
         /// Trade ids
         /// </summary>
         public IEnumerable<string> Trades { get; set; } = Array.Empty<string>();
-
-        string ICommonTrade.CommonId => Id;
-        decimal ICommonTrade.CommonPrice => Price;
-        decimal ICommonTrade.CommonQuantity => Quantity;
-        decimal ICommonTrade.CommonFee => Fee;
-        string? ICommonTrade.CommonFeeAsset => null;
-        DateTime ICommonTrade.CommonTradeTime => Timestamp;
     }
 
     /// <summary>
