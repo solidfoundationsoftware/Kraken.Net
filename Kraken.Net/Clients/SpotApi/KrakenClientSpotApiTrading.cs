@@ -13,7 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Kraken.Net.Objects.Models;
 using Kraken.Net.Interfaces.Clients.SpotApi;
-using CryptoExchange.Net.ComonObjects;
+using CryptoExchange.Net.CommonObjects;
 
 namespace Kraken.Net.Clients.SpotApi
 {
