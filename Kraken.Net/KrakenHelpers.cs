@@ -17,8 +17,12 @@ namespace Kraken.Net
         /// </summary>
         /// <param name="services">The service collection</param>
         /// <param name="defaultOptionsCallback">Set default options for the client</param>
+        /// <param name="socketClientLifeTime">The lifetime of the IKrakenSocketClient for the service collection. Defaults to Scoped.</param>
         /// <returns></returns>
-        public static IServiceCollection AddKraken(this IServiceCollection services, Action<KrakenClientOptions, KrakenSocketClientOptions>? defaultOptionsCallback = null)
+        public static IServiceCollection AddKraken(
+            this IServiceCollection services, 
+            Action<KrakenClientOptions, KrakenSocketClientOptions>? defaultOptionsCallback = null,
+            ServiceLifetime? socketClientLifeTime = null)
         {
             if (defaultOptionsCallback != null)
             {
@@ -30,8 +34,12 @@ namespace Kraken.Net
                 KrakenSocketClient.SetDefaultOptions(socketOptions);
             }
 
-            return services.AddTransient<IKrakenClient, KrakenClient>()
-                           .AddScoped<IKrakenSocketClient, KrakenSocketClient>();
+            services.AddTransient<IKrakenClient, KrakenClient>();
+            if (socketClientLifeTime == null)
+                services.AddScoped<IKrakenSocketClient, KrakenSocketClient>();
+            else
+                services.Add(new ServiceDescriptor(typeof(IKrakenSocketClient), typeof(KrakenSocketClient), socketClientLifeTime.Value));
+            return services;
         }
 
         /// <summary>
