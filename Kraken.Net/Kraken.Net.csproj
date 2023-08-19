@@ -19,7 +19,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
     <NeutralLanguage>en</NeutralLanguage>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageReleaseNotes>2.2.4 - Added missing ledger entry types, Fixed threading issue when signing requests</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup>
