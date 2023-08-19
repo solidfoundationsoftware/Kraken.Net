@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using CryptoExchange.Net.Converters;
-using Kraken.Net.Objects;
+using Kraken.Net.Enums;
 
 namespace Kraken.Net.Converters
 {
@@ -21,6 +21,7 @@ namespace Kraken.Net.Converters
             new KeyValuePair<LedgerEntryType, string>(LedgerEntryType.Spend, "spend"),
             new KeyValuePair<LedgerEntryType, string>(LedgerEntryType.Receive, "receive"),
             new KeyValuePair<LedgerEntryType, string>(LedgerEntryType.Settled, "settled"),
+            new KeyValuePair<LedgerEntryType, string>(LedgerEntryType.Staking, "staking"),
         };
     }
 }

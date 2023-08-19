@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -16,53 +15,54 @@ namespace Kraken.Net
     internal class KrakenAuthenticationProvider: AuthenticationProvider
     {
         private readonly INonceProvider _nonceProvider;
-
         private readonly byte[] _hmacSecret;
 
         public KrakenAuthenticationProvider(ApiCredentials credentials, INonceProvider? nonceProvider) : base(credentials)
         {
-            if(credentials.Secret == null)
-                throw new ArgumentException("ApiKey/Secret needed");
+            if (credentials.CredentialType != ApiCredentialsType.Hmac)
+                throw new Exception("Only Hmac authentication is supported");
 
             _nonceProvider = nonceProvider ?? new KrakenNonceProvider();
-            _hmacSecret = Convert.FromBase64String(credentials.Secret.GetString());
+            _hmacSecret = Convert.FromBase64String(credentials.Secret!.GetString());
         }
 
-        public override Dictionary<string, object> AddAuthenticationToParameters(string uri, HttpMethod method, Dictionary<string, object> parameters, bool signed, HttpMethodParameterPosition parameterPosition, ArrayParametersSerialization arraySerialization)
+        public override void AuthenticateRequest(RestApiClient apiClient, Uri uri, HttpMethod method, Dictionary<string, object> providedParameters, bool auth, ArrayParametersSerialization arraySerialization, HttpMethodParameterPosition parameterPosition, out SortedDictionary<string, object> uriParameters, out SortedDictionary<string, object> bodyParameters, out Dictionary<string, string> headers)
         {
-            if (!signed)
-                return parameters;
+            uriParameters = parameterPosition == HttpMethodParameterPosition.InUri ? new SortedDictionary<string, object>(providedParameters, new KrakenParameterComparer()) : new SortedDictionary<string, object>();
+            bodyParameters = parameterPosition == HttpMethodParameterPosition.InBody ? new SortedDictionary<string, object>(providedParameters, new KrakenParameterComparer()) : new SortedDictionary<string, object>();
+            headers = new Dictionary<string, string>();
 
-            parameters.Add("nonce", _nonceProvider.GetNonce());
-            return parameters;
-        }
+            if (!auth)
+                return;
 
-        public override Dictionary<string, string> AddAuthenticationToHeaders(string uri, HttpMethod method, Dictionary<string, object> parameters, bool signed, HttpMethodParameterPosition parameterPosition, ArrayParametersSerialization arraySerialization)
-        {
-            if(!signed)
-                return new Dictionary<string, string>();
+            var parameters = parameterPosition == HttpMethodParameterPosition.InUri ? uriParameters : bodyParameters;
 
-            if (Credentials.Key == null)
-                throw new ArgumentException("ApiKey/Secret needed");
+            headers.Add("API-Key", _credentials.Key!.GetString());
+            var nonce = _nonceProvider.GetNonce();
+            parameters.Add("nonce", nonce);
+            var np = nonce + uri.SetParameters(parameters, arraySerialization).Query.Replace("?", "");
 
-            var nonce = parameters.Single(n => n.Key == "nonce").Value;
-            var paramList = parameters.OrderBy(o => o.Key != "nonce");
-            var pars = string.Join("&", paramList.Select(p => $"{p.Key}={p.Value}"));
+            var pathBytes = Encoding.UTF8.GetBytes(uri.AbsolutePath);
+            var allBytes = pathBytes.Concat(SignSHA256Bytes(np)).ToArray();
 
-            var result = new Dictionary<string, string> {{"API-Key", Credentials.Key.GetString()}};
-            var np = nonce + pars;
-            byte[] nonceParamsBytes;
-            using (var sha = SHA256.Create())
-                nonceParamsBytes = sha.ComputeHash(Encoding.UTF8.GetBytes(np));
-            var pathBytes = Encoding.UTF8.GetBytes(uri.Split(new[] { ".com" }, StringSplitOptions.None)[1].Split('?')[0]);
-            var allBytes = pathBytes.Concat(nonceParamsBytes).ToArray();
-
-            byte[] sign;
+            string sign;
             using (var hmac = new HMACSHA512(_hmacSecret))
-                sign = hmac.ComputeHash(allBytes);
+                sign = Convert.ToBase64String(hmac.ComputeHash(allBytes));
 
-            result.Add("API-Sign", Convert.ToBase64String(sign));
-            return result;
+            headers.Add("API-Sign", sign);
+        }
+    }
+
+    internal class KrakenParameterComparer : IComparer<string>
+    {
+        public int Compare(string x, string y)
+        {
+            if (x == "nonce")
+                return -1;
+            if (y == "nonce")
+                return 1;
+
+            return x.CompareTo(y);
         }
     }
 }

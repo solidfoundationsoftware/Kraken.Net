@@ -18,15 +18,19 @@ namespace Kucoin.Net.UnitTests.TestImplementations
         public event Action<string> OnMessage;
         public event Action<Exception> OnError;
         public event Action OnOpen;
+#pragma warning disable 0067
+        public event Action OnReconnecting;
+        public event Action OnReconnected;
+#pragma warning restore 0067
 #pragma warning restore 8618
 
         public int Id { get; }
         public bool ShouldReconnect { get; set; }
-        public Func<string, string>? DataInterpreterString { get; set; }
-        public Func<byte[], string>? DataInterpreterBytes { get; set; }
+        public Func<string, string> DataInterpreterString { get; set; }
+        public Func<byte[], string> DataInterpreterBytes { get; set; }
         public DateTime? DisconnectTime { get; set; }
         public string Url { get; } = "";
-        public Encoding? Encoding { get; set; }
+        public Encoding Encoding { get; set; }
 
         public bool IsClosed => !Connected;
         public bool IsOpen => Connected;
@@ -34,11 +38,16 @@ namespace Kucoin.Net.UnitTests.TestImplementations
         public TimeSpan PingInterval { get; set; }
         public SslProtocols SSLProtocols { get; set; }
         public TimeSpan Timeout { get; set; }
-        public string? Origin { get; set; }
+        public string Origin { get; set; }
         public bool Reconnecting { get; set; }
         public int? RatelimitPerSecond { get; set; }
-        public string? LastSendMessage { get; set; }
+        public string LastSendMessage { get; set; }
         public double IncomingKbps => 0;
+
+        public Uri Uri => new Uri("wss://test.com/ws");
+
+        public TimeSpan KeepAliveInterval { get; set; }
+        public Func<Task<Uri>> GetReconnectionUrl { get; set; }
 
         public Task<bool> ConnectAsync()
         {
@@ -96,6 +105,17 @@ namespace Kucoin.Net.UnitTests.TestImplementations
         public void InvokeError(Exception error)
         {
             OnError?.Invoke(error);
+        }
+
+        public async Task ProcessAsync()
+        {
+            while (Connected)
+                await Task.Delay(50);
+        }
+
+        public Task ReconnectAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,100 +1,156 @@
-# KrakenExchange.Net
-![Build status](https://travis-ci.com/JKorf/Kraken.Net.svg?branch=master) ![Nuget version](https://img.shields.io/nuget/v/KrakenExchange.net.svg)  ![Nuget downloads](https://img.shields.io/nuget/dt/KrakenExchange.Net.svg)
+# Kraken.Net
+[![.NET](https://github.com/JKorf/Kraken.Net/actions/workflows/dotnet.yml/badge.svg)](https://github.com/JKorf/Kraken.Net/actions/workflows/dotnet.yml) ![Nuget version](https://img.shields.io/nuget/v/KrakenExchange.net.svg)  ![Nuget downloads](https://img.shields.io/nuget/dt/KrakenExchange.Net.svg)
 
-KrakenExchange.Net is a wrapper around the Kraken API as described on [Kraken](https://www.kraken.com/features/api), including all features the API provides using clear and readable objects, both for the REST  as the websocket API's.
+Kraken.Net is a wrapper around the Kraken API as described on [Kraken](https://www.kraken.com/features/api), including all features the API provides using clear and readable objects, both for the REST  as the websocket API's.
 
 **If you think something is broken, something is missing or have any questions, please open an [Issue](https://github.com/JKorf/Kraken.Net/issues)**
 
-## CryptoExchange.Net
-This library is build upon the CryptoExchange.Net library, make sure to check out the documentation on that for basic usage: [docs](https://github.com/JKorf/CryptoExchange.Net)
+[Documentation](https://jkorf.github.io/Kraken.Net/)
 
-## Donate / Sponsor
-I develop and maintain this package on my own for free in my spare time. Donations are greatly appreciated. If you prefer to donate any other currency please contact me.
+## Support the project
+I develop and maintain this package on my own for free in my spare time, any support is greatly appreciated.
 
-**Btc**:  12KwZk3r2Y3JZ2uMULcjqqBvXmpDwjhhQS  
-**Eth**:  0x069176ca1a4b1d6e0b7901a6bc0dbf3bb0bf5cc2  
-**Nano**: xrb_1ocs3hbp561ef76eoctjwg85w5ugr8wgimkj8mfhoyqbx4s1pbc74zggw7gs  
+### Donate
+Make a one time donation in a crypto currency of your choice. If you prefer to donate a currency not listed here please contact me.
 
-Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/sponsors/JKorf)  
+**Btc**:  bc1qz0jv0my7fc60rxeupr23e75x95qmlq6489n8gh  
+**Eth**:  0x8E21C4d955975cB645589745ac0c46ECA8FAE504  
+
+### Sponsor
+Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/sponsors/JKorf). 
 
 ## Discord
 A Discord server is available [here](https://discord.gg/MSpeEtSY8t). For discussion and/or questions around the CryptoExchange.Net and implementation libraries, feel free to join.
 
-## Getting started
-Make sure you have installed the KrakenExchange.Net [Nuget](https://www.nuget.org/packages/KrakenExchange.Net/) package and add `using Kraken.Net` to your usings.  You now have access to 2 clients:  
-**KrakenClient**  
-The client to interact with the Kraken REST API. Getting prices:
-````C#
-var client = new KrakenClient(new KrakenClientOptions(){
- // Specify options for the client
-});
-var callResult = await client.GetTickersAsync();
-// Make sure to check if the call was successful
-if(!callResult.Success)
-{
-  // Call failed, check callResult.Error for more info
-}
-else
-{
-  // Call succeeded, callResult.Data will have the resulting data
-}
-````
-
-Placing an order:
-````C#
-var client = new KrakenClient(new KrakenClientOptions(){
- // Specify options for the client
- ApiCredentials = new ApiCredentials("Key", "Secret")
-});
-var callResult = await client.PlaceOrderAsync("BTCUSDT", OrderSide.Buy, OrderType.Limit, 10, price: 50);
-// Make sure to check if the call was successful
-if(!callResult.Success)
-{
-  // Call failed, check callResult.Error for more info
-}
-else
-{
-  // Call succeeded, callResult.Data will have the resulting data
-}
-````
-
-**KrakenSocketClient**  
-The client to interact with the Kraken websocket API. Basic usage:
-````C#
-var client = new KrakenSocketClient(new KrakenSocketClientOptions()
-{
-  // Specify options for the client
-});
-var subscribeResult = client.SubscribeToTickerUpdatesAsync("ETHXBT", data => {
-  // Handle data when it is received
-});
-// Make sure to check if the subscritpion was successful
-if(!subscribeResult.Success)
-{
-  // Subscription failed, check callResult.Error for more info
-}
-else
-{
-  // Subscription succeeded, the handler will start receiving data when it is available
-}
-````
-
-## Client options
-For the basic client options see also the CryptoExchange.Net [docs](https://github.com/JKorf/CryptoExchange.Net#client-options). The here listed options are the options specific for Kraken.Net.  
-**KrakenClientOptions**  
-| Property | Description | Default |
-| ----------- | ----------- | ---------|
-|`StaticTwoFactorAuthenticationPassword`|The static password to be sent as `otp` parameter in requests |`null`
-
-**KrakenSocketClientOptions**  
-| Property | Description | Default |
-| ----------- | ----------- | ---------|
-|`AuthBaseAddress`|The base address for authenticated subscriptions|`wss://ws-auth.kraken.com/`
-
 ## Release notes
-* Version 2.2.4 - 06 Dec 2021
-    * Added missing ledger entry types
-    * Fixed threading issue when signing requests
+* Version 4.1.2 - 23 Jul 2023
+    * Fix for missing Symbol property on futures order book stream update
+
+* Version 4.1.1 - 11 Jul 2023
+    * Added amount parameter to GetDepositAddresses endpoint
+    * Added limit parameter to SpotApi GetTradeHistory endpoint
+    * Added address parameter to Withdraw endpoint
+    * Added missing stop order properties on futures OpenOrders model
+    * Fixed duplice parameter issue on SpotApi PlaceOrder
+    * Fixed TickSize property parsing on SpotApi GetSymbols endpoint
+
+* Version 4.1.0 - 05 Jul 2023
+    * Added support for Kraken Futures
+
+* Version 4.0.0 - 25 Jun 2023
+    * Updated CryptoExchange.Net to version 6.0.0
+    * Renamed KrakenClient to KrakenRestClient
+    * Renamed **Streams to **Api on the KrakenSocketClient
+    * Updated endpoints to consistently use a base url without any path as basis to make switching environments/base urls clearer
+    * Added IKrakenOrderBookFactory and implementation for creating order books
+    * Updated dependency injection register method (AddKraken)
+
+* Version 3.1.10 - 19 Jun 2023
+    * Fixed close ordertype parameter being sent even when not provided
+
+* Version 3.1.9 - 14 May 2023
+    * Added close parameters to rest PlaceOrder endpoint
+
+* Version 3.1.8 - 15 Apr 2023
+    * Added GetWithdrawalStatusAsync endpoint
+    * Added CancelWithdrawalAsync endpoint
+    * Added TransferAsync endpoint
+    * Updated various response models and endpoint parameters
+
+* Version 3.1.7 - 18 Mar 2023
+    * Added reduceOnly and selfTradePreventionType parameters to place order endpoints
+    * Updated CryptoExchange.Net
+
+* Version 3.1.6 - 14 Feb 2023
+    * Updated CryptoExchange.Net
+    * Added retry on nonce error
+
+* Version 3.1.5 - 05 Feb 2023
+    * Added CancelAllOrdersAsync endpoint
+
+* Version 3.1.4 - 13 Jan 2023
+    * Added support for Trade In Force
+
+* Version 3.1.3 - 03 Jan 2023
+    * Fixed stackoverflow on SubscribeToTradeUpdatesAsync
+
+* Version 3.1.2 - 29 Dec 2022
+    * Added multi-symbol overloads for socket client subscribe methods
+
+* Version 3.1.1 - 21 Nov 2022
+    * Fixed reconnect url
+
+* Version 3.1.0 - 17 Nov 2022
+    * Updated CryptoExchange.Net
+    * Fixed authenticated socket subscription not being able to reconnect
+
+* Version 3.0.15 - 17 Aug 2022
+    * Added support for viqc oflags
+
+* Version 3.0.14 - 18 Jul 2022
+    * Updated CryptoExchange.Net
+
+* Version 3.0.13 - 16 Jul 2022
+    * Updated CryptoExchange.Net
+
+* Version 3.0.12 - 10 Jul 2022
+    * Fixed exception when trying to access result from PlaceOrderAsync when validateOnly is set to true
+    * Updated CryptoExchange.Net
+
+* Version 3.0.11 - 12 Jun 2022
+    * Added staking endpoints
+    * Updated CryptoExchange.Net
+
+* Version 3.0.10 - 24 May 2022
+    * Updated CryptoExchange.Net
+
+* Version 3.0.9 - 22 May 2022
+    * Updated CryptoExchange.Net
+
+* Version 3.0.8 - 08 May 2022
+    * Fixed symbol validation not allowing T/EUR
+    * Updated CryptoExchange.Net
+
+* Version 3.0.7 - 01 May 2022
+    * Updated CryptoExchange.Net which fixed an timing related issue in the websocket reconnection logic
+    * Added seconds representation to KlineInterval enum
+    * Added flags parameter to socket PlaceOrderAsync
+
+* Version 3.0.6 - 14 Apr 2022
+    * Updated CryptoExchange.Net
+
+* Version 3.0.5 - 10 Mar 2022
+    * Updated CryptoExchange.Net
+
+* Version 3.0.4 - 08 Mar 2022
+    * Fixed startTime/endTime parameters in socket PlaceOrderAsync
+    * Fixed socket CancelOrderAsync not returning error on if failed
+    * Updated CryptoExchange.Net
+
+* Version 3.0.3 - 01 Mar 2022
+    * Updated CryptoExchange.Net improving the websocket reconnection robustness
+
+* Version 3.0.2 - 27 Feb 2022
+    * Updated CryptoExchange.Net to fix timestamping issue when request is ratelimiter
+
+* Version 3.0.1 - 24 Feb 2022
+    * Updated CryptoExchange.Net
+
+* Version 3.0.0 - 18 Feb 2022
+	* Added Github.io page for documentation: https://jkorf.github.io/Kraken.Net/
+	* Added unit tests for parsing the returned JSON for each endpoint and subscription
+	* Added AddKraken extension method on IServiceCollection for easy dependency injection
+	* Added URL reference to API endpoint documentation for each endpoint
+	* Added default rate limiter
+
+	* Refactored client structure to be consistent across exchange implementations
+	* Renamed various properties to be consistent across exchange implementations
+
+	* Cleaned up project structure
+	* Fixed various models
+
+	* Updated CryptoExchange.Net, see https://github.com/JKorf/CryptoExchange.Net#release-notes
+	* See https://jkorf.github.io/Kraken.Net/MigrationGuide.html for additional notes for updating from V2 to V3
 
 * Version 2.2.3 - 08 Oct 2021
     * Updated CryptoExchange.Net to fix some socket issues

@@ -7,9 +7,9 @@
   <PropertyGroup>
     <PackageId>KrakenExchange.Net</PackageId>
     <Authors>JKorf</Authors>
-    <PackageVersion>2.2.4</PackageVersion>
-    <AssemblyVersion>2.2.4</AssemblyVersion>
-    <FileVersion>2.2.4</FileVersion>
+    <PackageVersion>4.1.2</PackageVersion>
+    <AssemblyVersion>4.1.2</AssemblyVersion>
+    <FileVersion>4.1.2</FileVersion>
     <Description>Kraken.Net is a .Net wrapper for the Kraken API. It includes all features the API provides, REST API and Websocket, using clear and readable objects including but not limited to Reading market info, Placing and managing orders and Reading balances and funds</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>Kraken Kraken.Net C# .Net CryptoCurrency Exchange API wrapper</PackageTags>
@@ -19,8 +19,8 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
     <NeutralLanguage>en</NeutralLanguage>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <PackageReleaseNotes>2.2.4 - Added missing ledger entry types, Fixed threading issue when signing requests</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReleaseNotes>4.1.2 - Fix for missing Symbol property on futures order book stream update</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup>
     <DocumentationFile>Kraken.Net.xml</DocumentationFile>
@@ -49,6 +49,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="CryptoExchange.Net" Version="6.0.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
